@@ -1,0 +1,21 @@
+---
+    name: CI platform/traffic
+
+    on:
+      pull_request:
+        paths:
+          - 'dev-requirements.txt'
+          - 'pip-requirements.txt'
+          - '.github/workflows/python_reusable.yml'
+          - '.github/workflows/ci_inbox.yml'
+          - 'platform/inbox/**'
+          - 'platform/traffic/**'
+      workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
+
+    jobs:
+      ci-platform-traffic:
+        uses:
+          ./.github/workflows/python_reusable.yml
+        with:
+          working-directory: platform/traffic
+        secrets: inherit

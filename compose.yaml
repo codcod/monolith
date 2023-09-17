@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  inbox:
+    image: stelo-inbox
+    container_name: inbox
+    build:
+      context: ./platform/inbox
+    restart: unless-stopped
+    environment:
+      RABBITMQ_BROKER_URL: "rabbitmq-stream://guest:guest@rabbitmq"
+    ports:
+      - "8080:8080"
+    networks:
+      - stelo_network
+
+  traffic:
+    image: stelo-traffic
+    container_name: traffic
+    build:
+      context: ./platform/
+      dockerfile: traffic/Dockerfile
+    restart: unless-stopped
+    environment:
+      RABBITMQ_BROKER_URL: "rabbitmq-stream://guest:guest@rabbitmq"
+    ports:
+      - "8080:8080"
+    networks:
+      - stelo_network
+
+networks:
+  stelo_network:
+    driver: bridge
+    #external: true

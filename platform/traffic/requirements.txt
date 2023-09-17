@@ -1,0 +1,3 @@
+-e ../inbox  # local dependency, use editable install
+asyncpg
+uvloop
