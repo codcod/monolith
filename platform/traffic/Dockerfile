@@ -10,11 +10,11 @@ RUN python -m venv /opt/venv
 ENV PATH "/opt/venv/bin:$PATH"
 
 RUN mkdir -p /opt/stelo/
-COPY inbox /opt/stelo
+COPY ../inbox /opt/stelo
 
 WORKDIR /opt/stelo/
 RUN mkdir ./traffic
-COPY ./traffic/requirements.txt ./traffic
+COPY requirements.txt ./traffic
 RUN cd ./traffic && pip install --no-cache-dir -r requirements.txt
 
 #
