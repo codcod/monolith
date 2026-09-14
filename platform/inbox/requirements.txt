@@ -1,4 +1,0 @@
-#-e ../trafic  # local dependency, use editable install
-#numpy==1.22.3  # external dependency, installed from PyPI
-sanic==23.6.0
-uvloop

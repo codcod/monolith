@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "stelo-admin"
+version = "0.0.1"
+description = "Read-only ops dashboard over the inbox/traffic/dispatcher pipeline"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "stelo-base",
+]
+
+[tool.uv.sources]
+stelo-base = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stelo"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

@@ -1,2 +1,31 @@
-.venv
-dist
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# uv / build artifacts
+.venv/
+dist/
+build/
+
+# tool caches
+.ruff_cache/
+.mypy_cache/
+.ty_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local settings — copy .env.example to .env and adjust. Never commit real
+# secrets here even though local defaults aren't sensitive.
+.env
+.env.*.local
+
+# editor / OS
+.DS_Store
+.idea/
+.vscode/
+
+# AI
+.claude

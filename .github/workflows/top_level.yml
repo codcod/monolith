@@ -1,54 +1,65 @@
----
-    name: Top-level CI
-    on:
-      workflow_dispatch:
-      pull_request:
-      push:
-        branches: main  # Comment this line if you want to test the CI before opening a PR
+name: Top-level CI
 
-    jobs:
-      ci-global:
-        runs-on: ubuntu-22.04
-        timeout-minutes: 10
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: main
 
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
+concurrency:
+  group: ci-top-level-${{ github.ref }}
+  cancel-in-progress: true
 
-          - name: Setup Python
-            uses: actions/setup-python@v4
-            timeout-minutes: 5
-            with:
-              python-version-file: .python-version
-              cache: 'pip'
-              cache-dependency-path: |
-                pip-requirements.txt
-                dev-requirements.txt
+jobs:
+  # Full-stack smoke test: builds all three service images, brings up
+  # postgres/rabbitmq, runs every service's *-migrate one-shot, starts all
+  # three services, and checks inbox's /health — the same thing `just up`
+  # does locally. Runs on every PR (not path-filtered) since it's the one
+  # check that exercises the whole compose stack together, not one module
+  # in isolation.
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
 
-          - name: Install Python dependencies
-            run: |
-              pip install -r pip-requirements.txt
-              pip install -r dev-requirements.txt
+      - name: Set up local env
+        run: cp .env.example .env
 
-          # in order to test the template as well, we create a temporary library in the CI
-          - name: Create library with template
-            run: |
-              cookiecutter --no-input templates/pylibrary --output-dir libs/
-              git add libs/library_name  # So that checks below apply to generated library
+      - name: Build images
+        run: docker compose build
 
-          - name: Format Python imports
-            run: |
-              isort --check-only $(git ls-files "*.py")
+      - name: Start stack
+        run: docker compose up -d
 
-          - name: Format Python
-            run: |
-              black --check $(git ls-files "*.py")
+      - name: Wait for inbox health
+        run: |
+          for _ in $(seq 1 30); do
+            if curl -sf http://localhost:8080/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::inbox never became healthy"
+          exit 1
 
-          - name: Lint Python
-            run: |
-              flake8 $(git ls-files "*.py")
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs
 
-          # Are all public symbols documented? (see top-level pyproject.toml configuration)
-          - name: Lint Python doc
-            run: |
-              pylint $(git ls-files "*.py")
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
+
+  actionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Download actionlint
+        run: |
+          curl -s https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash -s -- latest .
+      - name: Lint workflows
+        run: ./actionlint -color

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "stelo-dispatcher"
+version = "0.0.1"
+description = "Sends communication requests over their target channel"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "stelo-base",
+]
+
+[tool.uv.sources]
+stelo-base = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stelo"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

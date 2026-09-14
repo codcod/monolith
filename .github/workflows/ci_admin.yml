@@ -1,0 +1,28 @@
+name: CI platform/admin
+
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/python_reusable.yml"
+      - ".github/workflows/ci_admin.yml"
+      - "platform/stelo-base/**"
+      - "platform/admin/**"
+  workflow_dispatch: # Allows triggering the workflow manually in the GitHub UI
+
+concurrency:
+  group: ci-admin-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci-platform-admin:
+    uses: ./.github/workflows/python_reusable.yml
+    with:
+      working-directory: platform/admin
+      package-name: stelo-admin
+      # rbfly (a stelo-base dependency, pulled in transitively even though
+      # admin's own code never imports streams.py) compiles a Cython
+      # extension from source — no manylinux wheel.
+      install-packages: build-essential
+    secrets: inherit

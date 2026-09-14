@@ -1,16 +1,85 @@
-version: "3.8"
-
 services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # Schemas/tables are not seeded here — each service's own `*-migrate`
+    # one-shot runs its Alembic migrations before that service starts.
+    #
+    # These creds also appear, hardcoded, in each service's config/config.toml
+    # `db` DSN — config.toml has no env-var expansion, so if you change the
+    # values below, update those DSNs to match.
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stelo_network
+
+  rabbitmq:
+    image: rabbitmq:4.3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    volumes:
+      - ./platform/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
+      - rabbitmq-data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "5552:5552"   # RabbitMQ Streams
+      - "15672:15672" # management UI
+    networks:
+      - stelo_network
+
+  # The runtime image's ENTRYPOINT is plain `python` with no shell (distroless),
+  # so migrations run as their own one-shot with CMD overridden, rather than
+  # chained onto the app's startup command.
+  inbox-migrate:
+    image: stelo-inbox
+    build:
+      context: .
+      dockerfile: platform/inbox/Dockerfile
+    command: ["-m", "alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - stelo_network
+
   inbox:
     image: stelo-inbox
     container_name: inbox
     build:
-      context: ./platform/inbox
+      context: .
+      dockerfile: platform/inbox/Dockerfile
     restart: unless-stopped
-    environment:
-      RABBITMQ_BROKER_URL: "rabbitmq-stream://guest:guest@rabbitmq"
+    depends_on:
+      inbox-migrate:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
     ports:
-      - "8080:8080"
+      - "${INBOX_PORT}:8080"
+    networks:
+      - stelo_network
+
+  traffic-migrate:
+    image: stelo-traffic
+    build:
+      context: .
+      dockerfile: platform/traffic/Dockerfile
+    command: ["-m", "alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - stelo_network
 
@@ -18,17 +87,69 @@ services:
     image: stelo-traffic
     container_name: traffic
     build:
-      context: ./platform/
-      dockerfile: traffic/Dockerfile
+      context: .
+      dockerfile: platform/traffic/Dockerfile
     restart: unless-stopped
-    environment:
-      RABBITMQ_BROKER_URL: "rabbitmq-stream://guest:guest@rabbitmq"
+    depends_on:
+      traffic-migrate:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+    networks:
+      - stelo_network
+
+  dispatcher-migrate:
+    image: stelo-dispatcher
+    build:
+      context: .
+      dockerfile: platform/dispatcher/Dockerfile
+    command: ["-m", "alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - stelo_network
+
+  dispatcher:
+    image: stelo-dispatcher
+    container_name: dispatcher
+    build:
+      context: .
+      dockerfile: platform/dispatcher/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      dispatcher-migrate:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_started
+    networks:
+      - stelo_network
+
+  # Admin owns no schema of its own — it only reads inbox/traffic/dispatcher's,
+  # so it has no `-migrate` job, just depends on theirs having run.
+  admin:
+    image: stelo-admin
+    container_name: admin
+    build:
+      context: .
+      dockerfile: platform/admin/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      inbox-migrate:
+        condition: service_completed_successfully
+      traffic-migrate:
+        condition: service_completed_successfully
+      dispatcher-migrate:
+        condition: service_completed_successfully
     ports:
-      - "8080:8080"
+      - "${ADMIN_PORT}:8080"
     networks:
       - stelo_network
 
 networks:
   stelo_network:
     driver: bridge
-    #external: true
+
+volumes:
+  postgres-data:
+  rabbitmq-data:

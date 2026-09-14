@@ -1,0 +1,28 @@
+name: CI platform/dispatcher
+
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/python_reusable.yml"
+      - ".github/workflows/ci_dispatcher.yml"
+      - "platform/stelo-base/**"
+      - "platform/dispatcher/**"
+  workflow_dispatch: # Allows triggering the workflow manually in the GitHub UI
+
+concurrency:
+  group: ci-dispatcher-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci-platform-dispatcher:
+    uses: ./.github/workflows/python_reusable.yml
+    with:
+      working-directory: platform/dispatcher
+      package-name: stelo-dispatcher
+      lint-paths: "src tests migrations/env.py"
+      # rbfly (a stelo-base dependency) compiles a Cython extension from
+      # source — no manylinux wheel.
+      install-packages: build-essential
+    secrets: inherit

@@ -1,20 +1,28 @@
----
-    name: CI platform/inbox
+name: CI platform/inbox
 
-    on:
-      pull_request:
-        paths:
-          - 'dev-requirements.txt'
-          - 'pip-requirements.txt'
-          - '.github/workflows/python_reusable.yml'
-          - '.github/workflows/ci_inbox.yml'
-          - 'platform/inbox/**'
-      workflow_dispatch:  # Allows to trigger the workflow manually in GitHub UI
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/python_reusable.yml"
+      - ".github/workflows/ci_inbox.yml"
+      - "platform/stelo-base/**"
+      - "platform/inbox/**"
+  workflow_dispatch: # Allows triggering the workflow manually in the GitHub UI
 
-    jobs:
-      ci-platform-inbox:
-        uses:
-          ./.github/workflows/python_reusable.yml
-        with:
-          working-directory: platform/inbox
-        secrets: inherit
+concurrency:
+  group: ci-inbox-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci-platform-inbox:
+    uses: ./.github/workflows/python_reusable.yml
+    with:
+      working-directory: platform/inbox
+      package-name: stelo-inbox
+      lint-paths: "src tests migrations/env.py"
+      # rbfly (a stelo-base dependency) compiles a Cython extension from
+      # source — no manylinux wheel.
+      install-packages: build-essential
+    secrets: inherit

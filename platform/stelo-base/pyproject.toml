@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "stelo-base"
+version = "0.1.0"
+description = "Shared config, logging, DB, messaging and security helpers for stelo services"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "sqlalchemy[asyncio]>=2.0",
+    "asyncpg",
+    "alembic",
+    "rbfly",
+    "aiohttp",
+    "uvloop",
+    "orjson",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stelo"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

@@ -1,0 +1,25 @@
+name: CI platform/stelo-base
+
+on:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/python_reusable.yml"
+      - ".github/workflows/ci_stelo_base.yml"
+      - "platform/stelo-base/**"
+  workflow_dispatch: # Allows triggering the workflow manually in the GitHub UI
+
+concurrency:
+  group: ci-stelo-base-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci-platform-stelo-base:
+    uses: ./.github/workflows/python_reusable.yml
+    with:
+      working-directory: platform/stelo-base
+      package-name: stelo-base
+      # rbfly compiles a Cython extension from source — no manylinux wheel.
+      install-packages: build-essential
+    secrets: inherit

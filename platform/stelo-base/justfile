@@ -1,0 +1,41 @@
+repo_root := `git rev-parse --show-toplevel`
+
+# stelo-base is a shared library, not a deployable service — no run/docker/
+# migrate/perf targets here, just install/test/lint/fmt.
+
+# List available recipes (default when running `just` with no args)
+[group('dev')]
+list:
+    @just --list
+
+# Sync this package + its deps into the shared workspace venv at the repo root
+[group('dev')]
+install:
+    uv sync --project {{ repo_root }} --package stelo-base --inexact
+
+[group('test')]
+test: install
+    uv run --project {{ repo_root }} pytest -q
+
+# Auto-fix and reformat this module's code
+[group('quality')]
+fmt: install
+    uv run --project {{ repo_root }} ruff check --fix src tests
+    uv run --project {{ repo_root }} ruff format src tests
+
+# Lint + format-check + type-check this module (ty only checks src — tests
+# use loose fakes/doubles that aren't meant to type-check as the real thing)
+[group('quality')]
+lint: install
+    uv run --project {{ repo_root }} ruff check src tests
+    uv run --project {{ repo_root }} ruff format --check src tests
+    uv run --project {{ repo_root }} ty check src
+
+[group('dev')]
+clean:
+    find . -name __pycache__ -type d -exec rm -rf {} +
+
+# Mirror this module's GHA job (ci_stelo_base.yml → python_reusable.yml):
+# lint + format-check + type-check + test
+[group('ci')]
+ci: lint test

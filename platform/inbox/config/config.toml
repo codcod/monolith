@@ -1,3 +1,8 @@
 [inbox]
-db = "db string"
+db = "postgresql+asyncpg://stelo:stelo@postgres/stelo"
+rabbitmq_url = "rabbitmq-stream://guest:guest@rabbitmq"
+auth_token = "dev-token"
 log_level = "DEBUG"
+# HTTP worker processes (SO_REUSEPORT fan-out, see bin/stelo-inbox) — one
+# aiohttp process only ever uses one CPU core. Tune to available cores.
+workers = 4

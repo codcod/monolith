@@ -1,0 +1,3 @@
+[admin]
+db = "postgresql+asyncpg://stelo:stelo@postgres/stelo"
+log_level = "DEBUG"

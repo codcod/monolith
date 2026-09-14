@@ -1,2 +1,5 @@
 [traffic]
-dsn = "database string"
+db = "postgresql+asyncpg://stelo:stelo@postgres/stelo"
+rabbitmq_url = "rabbitmq-stream://guest:guest@rabbitmq"
+auth_token = "dev-token"
+log_level = "DEBUG"

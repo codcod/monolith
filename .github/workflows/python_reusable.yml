@@ -1,64 +1,65 @@
----
-    name: Reusable Python library CI
+name: Reusable Python module CI
 
-    on:
-      workflow_call:
-        inputs:
-          working-directory:
-            required: true
-            type: string
-            description: "From which folder this pipeline executes"
-          install-packages:
-            description: "Space seperated list of packages to install using apt-get."
-            default: ""
-            type: string
-          # To avoid being billed 360 minutes if a step does not terminate
-          # (we've seen the setup-python step below do so!)
-          ci-timeout:
-            description: "The timeout of the ci job. Default is 25min"
-            default: 25
-            type: number
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+        description: "Path (from repo root) of the module to lint/type-check/test"
+      package-name:
+        required: true
+        type: string
+        description: "uv workspace package name to sync, e.g. stelo-inbox"
+      lint-paths:
+        default: "src tests"
+        type: string
+        description: "Paths (relative to working-directory) ruff should check/format-check"
+      install-packages:
+        default: ""
+        type: string
+        description: "Space-separated apt packages to install before `uv sync` (e.g. native build deps)"
 
-    jobs:
-      local-ci-py-template:
-        runs-on: ubuntu-22.04
-        timeout-minutes: 30
+jobs:
+  module-ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
-        defaults:
-          run:
-            working-directory: ${{ inputs.working-directory }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
 
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-            with:
-              token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
 
-          - name: Setup Python
-            uses: actions/setup-python@v4
-            timeout-minutes: 5
-            with:
-              python-version-file: ${{ github.workspace }}/.python-version
-              cache: "pip"
-              cache-dependency-path: |
-                dev-requirements.txt
-                pip-requirements.txt
-                ${{ inputs.working-directory }}/requirements.txt
+      - name: Install extra packages
+        if: ${{ inputs.install-packages != '' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y ${{ inputs.install-packages }}
 
-          - name: Install extra packages
-            if: ${{ inputs.install-packages != ''}}
-            run: |
-              sudo apt-get install -y ${{ inputs.install-packages }}
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
-          - name: Install Python dependencies
-            run: |
-              pip install -r "$(git rev-parse --show-toplevel)/pip-requirements.txt"
-              pip install -r "$(git rev-parse --show-toplevel)/dev-requirements.txt" -r requirements.txt
+      # --project points at the workspace root (so the shared dev
+      # dependency-group — ruff/ty/pytest — is included) while --package
+      # scopes the sync to this module and its own dependency closure.
+      - name: Sync workspace deps for this package
+        run: uv sync --project "$GITHUB_WORKSPACE" --locked --package ${{ inputs.package-name }}
 
-          - name: Typecheck
-            run: |
-              pyright .
+      - name: Lint
+        run: uv run --project "$GITHUB_WORKSPACE" ruff check ${{ inputs.lint-paths }}
 
-          - name: Test
-            run: |
-              python3 -m pytest tests/  # Assume that tests are in folder "tests/"
+      - name: Format check
+        run: uv run --project "$GITHUB_WORKSPACE" ruff format --check ${{ inputs.lint-paths }}
+
+      # Only src/ is type-checked — tests use loose fakes/doubles that
+      # aren't meant to type-check against the real classes they stand in for.
+      - name: Type-check
+        run: uv run --project "$GITHUB_WORKSPACE" ty check src
+
+      - name: Test
+        run: uv run --project "$GITHUB_WORKSPACE" pytest -q

@@ -1,0 +1,81 @@
+repo_root := `git rev-parse --show-toplevel`
+
+# List available recipes (default when running `just` with no args)
+[group('dev')]
+list:
+    @just --list
+
+# Sync this package + its deps into the shared workspace venv at the repo root
+[group('dev')]
+install:
+    uv sync --project {{ repo_root }} --package stelo-inbox --inexact
+
+# Run against the dockerized postgres/rabbitmq — `just up` first
+[group('dev')]
+run: install
+    uv run --project {{ repo_root }} bin/stelo-inbox config/config.toml
+
+[group('test')]
+test: install
+    uv run --project {{ repo_root }} pytest -q
+
+# Only exercises /health — needs a live instance: `just up`, or `just run`.
+[group('test')]
+perf:
+    k6 run tests/performance/k6/script.js
+
+[group('db')]
+migrate: install
+    uv run --project {{ repo_root }} python -m alembic upgrade head
+
+[group('db')]
+migration name: install
+    uv run --project {{ repo_root }} python -m alembic revision --autogenerate -m "{{ name }}"
+
+[group('db')]
+downgrade rev="-1": install
+    uv run --project {{ repo_root }} python -m alembic downgrade {{ rev }}
+
+# Auto-fix and reformat this module's code
+[group('quality')]
+fmt: install
+    uv run --project {{ repo_root }} ruff check --fix src tests migrations/env.py
+    uv run --project {{ repo_root }} ruff format src tests migrations/env.py
+
+# Lint + format-check + type-check this module (ty only checks src — tests
+# use loose fakes/doubles that aren't meant to type-check as the real thing)
+[group('quality')]
+lint: install
+    uv run --project {{ repo_root }} ruff check src tests migrations/env.py
+    uv run --project {{ repo_root }} ruff format --check src tests migrations/env.py
+    uv run --project {{ repo_root }} ty check src
+
+# Image build only — the container needs postgres/rabbitmq to do anything
+# useful, so run it via `just up`, not standalone.
+[group('docker')]
+docker-build:
+    docker build -f Dockerfile -t stelo-inbox {{ repo_root }}
+
+# Boot this service via compose (shared postgres/rabbitmq start automatically as dependencies)
+[group('compose')]
+up:
+    docker compose -f {{ repo_root }}/compose.yaml up -d --build inbox
+
+# Stop and remove this service's own containers only — leaves shared postgres/rabbitmq untouched
+[group('compose')]
+down:
+    docker compose -f {{ repo_root }}/compose.yaml rm -sf inbox inbox-migrate
+
+# Tail this service's logs (app + its migration)
+[group('compose')]
+logs:
+    docker compose -f {{ repo_root }}/compose.yaml logs -f inbox inbox-migrate
+
+[group('dev')]
+clean:
+    find . -name __pycache__ -type d -exec rm -rf {} +
+
+# Mirror this module's GHA job (ci_inbox.yml → python_reusable.yml):
+# lint + format-check + type-check + test
+[group('ci')]
+ci: lint test
