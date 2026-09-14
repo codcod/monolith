@@ -1,59 +1,96 @@
 # Graph Report - monolith  (2026-09-14)
 
 ## Corpus Check
-- Corpus is ~12,767 words - fits in a single context window. You may not need a graph.
+- 99 files · ~15,720 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 30 file(s) not represented in the graph (top: (none) 18, .toml 4, .ini 3)
 
 ## Summary
-- 358 nodes · 519 edges · 28 communities (17 shown, 6 thin omitted)
-- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 67 edges (avg confidence: 0.86)
-- Token cost: 107,924 input · 0 output
+- 584 nodes · 796 edges · 81 communities (22 shown, 31 thin omitted)
+- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 102 edges (avg confidence: 0.89)
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `061cb8b1`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Auth Middleware & Request Security
-- Admin App Routes
-- CI Workflow & Build Rationale
-- Admin Metrics Tests
-- Inbox Worker Process Management
-- Database DSN Config
-- Dispatcher App Tests
-- Full-Stack CI & Compose Deployment
-- Admin App Bootstrap & Tests
-- Async DB Test Fakes
-- Traffic App Tests
-- Database Engine & Migrations
-- RabbitMQ Streams Test Fakes
-- Dispatcher App Routes
-- Notification Channel Senders
-- Datastar Reactive JS Library
-- Stelo Service Package Graph
-- Channel Sender Tests
-- Admin Frontend Channel Config
-- Frontend Script Options A
-- Frontend Script Options B
-- Sandbox Rebuild Script
-- Stelo Platform Root
+- make_app
+- events
+- stelo-base shared library
+- _serve
+- read_config
+- Message
+- Application
+- Self
+- make_engine
+- FakeClient
+- Application
+- channels.py
+- datastar.js
+- stelo-base
+- test_channels.py
+- inbox/tests/performance/k6/script.js
+- dispatcher/tests/performance/k6/script.js
+- traffic/tests/performance/k6/script.js
+- rebuild-sandbox.sh
+- stelo-platform
+- Message
+- Message
+- SqlAlchemyUnitOfWork
+- FakeConnection
+- FakeConnection
+- _make_client
+- FakeConnection
+- AbstractRepository
+- FakeUnitOfWork
+- FakeUnitOfWork
+- FakeUnitOfWork
+- Message
+- AsyncConnection
+- Config
+- get
+- Request
+- Response
+- Config
+- get
+- Request
+- Response
+- Self
+- Application
+- Config
+- get
+- Request
+- Response
+- Application
+- Config
+- get
+- Request
+- Response
+- Self
 
 ## God Nodes (most connected - your core abstractions)
 1. `make_app()` - 17 edges
 2. `events()` - 16 edges
-3. `FakeConnection` - 13 edges
-4. `stelo-base shared library` - 13 edges
-5. `FakeResult` - 12 edges
-6. `traffic service (design)` - 12 edges
-7. `_make_client()` - 10 edges
-8. `dispatcher service (design)` - 10 edges
-9. `_make_client()` - 9 edges
-10. `CHANGELOG.md Unreleased section` - 9 edges
+3. `SqlAlchemyUnitOfWork` - 15 edges
+4. `FakeConnection` - 13 edges
+5. `stelo-base shared library` - 13 edges
+6. `FakeResult` - 12 edges
+7. `Message` - 12 edges
+8. `Message` - 12 edges
+9. `Message` - 12 edges
+10. `traffic service (design)` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Switch from black/isort/flake8/pylint/pyright to ruff+ty` --semantically_similar_to--> `Reusable Python module CI workflow`  [INFERRED] [semantically similar]
   CHANGELOG.md → .github/workflows/python_reusable.yml
-- `src/-only type-check rationale` --semantically_similar_to--> `ty type-checking scoped to src/ only`  [INFERRED] [semantically similar]
-  .github/workflows/python_reusable.yml → PACKAGING.md
-- `traffic Dockerfile COPY ../inbox path-not-found error log` --semantically_similar_to--> `Repo-root Docker build context rationale`  [INFERRED] [semantically similar]
-  README.md → PACKAGING.md
 - `traffic Dockerfile COPY ../inbox path-not-found error log` --semantically_similar_to--> `Unified platform/ Docker build context`  [INFERRED] [semantically similar]
   README.md → development/design.md
+- `traffic Dockerfile COPY ../inbox path-not-found error log` --semantically_similar_to--> `Repo-root Docker build context rationale`  [INFERRED] [semantically similar]
+  README.md → PACKAGING.md
+- `src/-only type-check rationale` --semantically_similar_to--> `ty type-checking scoped to src/ only`  [INFERRED] [semantically similar]
+  .github/workflows/python_reusable.yml → PACKAGING.md
 - `admin service (compose)` --references--> `Relay Console admin dashboard`  [INFERRED]
   compose.yaml → platform/admin/static/index.html
 
@@ -65,95 +102,115 @@
 - **Inbox -> Traffic -> Dispatcher message pipeline over RabbitMQ Streams** — development_design_stelo_inbox_service, development_design_stelo_traffic_service, development_design_stelo_dispatcher_service, development_design_traffic_in_stream, development_design_dispatch_in_stream [EXTRACTED 1.00]
 - **rbfly Cython build-essential workaround shared by all module CI workflows** — _github_workflows_ci_admin_workflow, _github_workflows_ci_dispatcher_workflow, _github_workflows_ci_inbox_workflow, _github_workflows_ci_stelo_base_workflow, _github_workflows_ci_traffic_workflow [EXTRACTED 1.00]
 
-## Communities (28 total, 6 thin omitted)
+## Communities (81 total, 31 thin omitted)
 
-### Community 0 - "Auth Middleware & Request Security"
+### Community 0 - "make_app"
 Cohesion: 0.06
-Nodes (36): AbstractRouteDef, middleware, auth_middleware(), Request, Stamp every request with an id (reusing an inbound one if present) so it can be…, Build a bearer-token check middleware. `token` comes from module config. This…, request_id_middleware(), connect() (+28 more)
+Nodes (35): AbstractRouteDef, middleware, build_app(), Application, Config, _config(), test_health_ok(), test_index_page_is_reachable_without_auth() (+27 more)
 
-### Community 1 - "Admin App Routes"
+### Community 1 - "events"
 Cohesion: 0.09
-Nodes (33): AsyncConnection, FileResponse, events(), health(), index(), get, Request, Response (+25 more)
+Nodes (33): FileResponse, channel_breakdown(), ChannelCounts, error_rate(), Event, latency_percentiles_ms(), oldest_unprocessed_age_seconds(), AsyncConnection (+25 more)
 
-### Community 2 - "CI Workflow & Build Rationale"
-Cohesion: 0.12
-Nodes (35): rbfly transitive Cython build dependency note, CI platform/dispatcher workflow, CI platform/inbox workflow, CI platform/stelo-base workflow, CI platform/traffic workflow, src/-only type-check rationale, --project/--package uv sync scoping rationale, Reusable Python module CI workflow (+27 more)
+### Community 2 - "stelo-base shared library"
+Cohesion: 0.08
+Nodes (51): rbfly transitive Cython build dependency note, CI platform/admin workflow, CI platform/dispatcher workflow, CI platform/inbox workflow, CI platform/stelo-base workflow, CI platform/traffic workflow, src/-only type-check rationale, --project/--package uv sync scoping rationale (+43 more)
 
-### Community 3 - "Admin Metrics Tests"
-Cohesion: 0.11
-Nodes (12): FakeConnection, FakeResult, Stands in for `AsyncConnection`: `scalar()` and `execute()` each pop the next…, Stands in for a SQLAlchemy `Result` — only the bits metrics.py uses., test_channel_breakdown_maps_rows(), test_error_rate_defaults_to_zero_when_no_messages(), test_latency_percentiles_ms(), test_oldest_unprocessed_age_seconds() (+4 more)
+### Community 4 - "_serve"
+Cohesion: 0.24
+Nodes (8): Config, Run one HTTP worker on its own event loop, bound to a socket shared (via…, Fork `workers` worker processes (see `_serve_one`) and supervise them: forward…, _serve(), _serve_one(), build_app(), Application, Config
 
-### Community 4 - "Inbox Worker Process Management"
-Cohesion: 0.12
-Nodes (16): Config, Run one HTTP worker on its own event loop, bound to a socket shared (via…, Fork `workers` worker processes (see `_serve_one`) and supervise them: forward…, _serve(), _serve_one(), build_app(), create_message(), health() (+8 more)
-
-### Community 5 - "Database DSN Config"
+### Community 5 - "read_config"
 Cohesion: 0.12
 Nodes (15): get_dsn(), The DSN comes from the module's own config.toml (same file the app reads), not…, get_dsn(), The DSN comes from the module's own config.toml (same file the app reads), not…, Config, Read configuration file and return configuration object., Setup logging for an application., Setup Stelo application. 1. Setup logging. 2. Install uvloop based asyncio loop. (+7 more)
 
-### Community 6 - "Dispatcher App Tests"
-Cohesion: 0.15
-Nodes (6): FakeConnection, FakeEngine, FakeSender, Self, test_health_ok(), test_process_dispatch_in_sends_and_records()
+### Community 7 - "Message"
+Cohesion: 0.07
+Nodes (29): AsyncConnection, Message, SqlAlchemyMessageRepository, Message, traffic's own routing record — its row in `traffic.messages`. Distinct from…, build_app(), health(), process_traffic_in() (+21 more)
 
-### Community 7 - "Full-Stack CI & Compose Deployment"
-Cohesion: 0.23
-Nodes (16): CI platform/admin workflow, actionlint workflow-lint job, Full-stack compose smoke-test job (integration), Top-level CI workflow, Alpine+pip to distroless image, one-shot migrations, admin service (compose), dispatcher-migrate one-shot job (compose), dispatcher service (compose) (+8 more)
-
-### Community 8 - "Admin App Bootstrap & Tests"
-Cohesion: 0.19
-Nodes (14): build_app(), Application, Config, _config(), test_health_ok(), test_index_page_is_reachable_without_auth(), test_static_datastar_bundle_is_reachable_without_auth(), get (+6 more)
-
-### Community 9 - "Async DB Test Fakes"
-Cohesion: 0.18
-Nodes (8): FakeConnection, FakeEngine, _make_client(), Self, test_create_message_inserts_row_and_publishes(), test_create_message_requires_auth(), test_create_message_validates_payload(), test_health_ok()
-
-### Community 10 - "Traffic App Tests"
-Cohesion: 0.15
-Nodes (5): FakeConnection, FakeEngine, Self, test_health_ok(), test_process_traffic_in_inserts_and_republishes()
-
-### Community 11 - "Database Engine & Migrations"
+### Community 11 - "make_engine"
 Cohesion: 0.21
 Nodes (12): Connection, MetaData, make_engine(), AsyncEngine, Build an async SQLAlchemy core engine for a module's database. All modules…, _do_run_migrations(), Any, AsyncEngine (+4 more)
 
-### Community 12 - "RabbitMQ Streams Test Fakes"
-Cohesion: 0.16
-Nodes (6): FakeClient, FakePublisher, Self, Stands in for `rbfly.streams.StreamsClient` so the wrapper's create/…, test_consume_creates_stream_and_decodes_json(), test_publish_creates_stream_and_sends_json()
+### Community 12 - "FakeClient"
+Cohesion: 0.11
+Nodes (12): consume(), publish(), Any, Publish a message (as JSON) to `stream`, creating it and its publisher on first…, Consume JSON messages from `stream` from the point of subscription onward,…, FakeClient, FakePublisher, Self (+4 more)
 
-### Community 13 - "Dispatcher App Routes"
-Cohesion: 0.24
-Nodes (9): build_app(), health(), process_dispatch_in(), Application, Config, get, Request, Response (+1 more)
-
-### Community 14 - "Notification Channel Senders"
+### Community 14 - "channels.py"
 Cohesion: 0.22
 Nodes (4): EmailSender, Sender, SmsSender, WhatsAppSender
 
-### Community 15 - "Datastar Reactive JS Library"
+### Community 15 - "datastar.js"
 Cohesion: 0.38
 Nodes (3): apply(), get(), has()
 
-### Community 16 - "Stelo Service Package Graph"
+### Community 16 - "stelo-base"
 Cohesion: 0.40
 Nodes (5): stelo-admin, stelo-base, stelo-dispatcher, stelo-inbox, stelo-traffic
 
+### Community 28 - "Message"
+Cohesion: 0.07
+Nodes (29): AsyncConnection, Message, SqlAlchemyMessageRepository, Message, dispatcher's own send-outcome record — its row in `dispatcher.messages`.…, build_app(), health(), process_dispatch_in() (+21 more)
+
+### Community 29 - "Message"
+Cohesion: 0.08
+Nodes (26): Channel, AsyncConnection, Message, SqlAlchemyMessageRepository, Message, inbox's own intake record — its row in `inbox.messages`. Distinct from…, create_message(), health() (+18 more)
+
+### Community 30 - "SqlAlchemyUnitOfWork"
+Cohesion: 0.09
+Nodes (14): AbstractUnitOfWork, AsyncEngine, Self, Owns one `AsyncConnection` + transaction for the lifetime of the `async with`…, One business transaction: `async with uow: ...; await uow.commit()`. Exiting…, SqlAlchemyUnitOfWork, FakeConnection, FakeEngine (+6 more)
+
+### Community 31 - "FakeConnection"
+Cohesion: 0.17
+Nodes (12): FakeConnection, FakeResult, Stands in for `AsyncConnection`: `scalar()` and `execute()` each pop the next…, Stands in for a SQLAlchemy `Result` — only the bits metrics.py uses., test_channel_breakdown_maps_rows(), test_error_rate_defaults_to_zero_when_no_messages(), test_latency_percentiles_ms(), test_oldest_unprocessed_age_seconds() (+4 more)
+
+### Community 32 - "FakeConnection"
+Cohesion: 0.14
+Nodes (5): FakeConnection, FakeEngine, FakeSender, FakeTransaction, test_process_dispatch_in_sends_and_records()
+
+### Community 33 - "_make_client"
+Cohesion: 0.16
+Nodes (8): FakeConnection, FakeEngine, FakeTransaction, _make_client(), test_create_message_inserts_row_and_publishes(), test_create_message_requires_auth(), test_create_message_validates_payload(), test_health_ok()
+
+### Community 34 - "FakeConnection"
+Cohesion: 0.15
+Nodes (4): FakeConnection, FakeEngine, FakeTransaction, test_process_traffic_in_inserts_and_republishes()
+
+### Community 35 - "AbstractRepository"
+Cohesion: 0.19
+Nodes (7): AbstractRepository, A collection-like façade over one aggregate's storage. Concrete repositories…, InMemoryRepository, test_abstract_repository_cannot_be_instantiated(), test_add_then_get_returns_the_same_item(), test_get_missing_id_returns_none(), T
+
+### Community 36 - "FakeUnitOfWork"
+Cohesion: 0.24
+Nodes (7): FakeUnitOfWork, _noop_publish(), test_submit_message_adds_the_message_and_commits(), test_submit_message_publishes_only_after_commit(), commit(), test_submit_message_publishes_the_wire_shape_after_commit(), publish()
+
+### Community 37 - "FakeUnitOfWork"
+Cohesion: 0.29
+Nodes (4): FakeSender, FakeUnitOfWork, test_dispatch_message_records_the_outcome_and_commits(), test_dispatch_message_sends_via_the_given_sender()
+
+### Community 38 - "FakeUnitOfWork"
+Cohesion: 0.31
+Nodes (4): FakeUnitOfWork, _noop_publish(), test_route_message_adds_a_routing_row_and_commits(), test_route_message_republishes_with_status_routed()
+
 ## Knowledge Gaps
-- **14 isolated node(s):** `stelo-admin`, `stelo-dispatcher`, `options`, `stelo-inbox`, `options` (+9 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 146 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **14 isolated node(s):** `stelo-admin`, `stelo-dispatcher`, `stelo-inbox`, `stelo-traffic`, `CHANNELS` (+9 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 257 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **31 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `make_app()` connect `Auth Middleware & Request Security` to `Admin App Bootstrap & Tests`, `Database Engine & Migrations`, `Inbox Worker Process Management`, `Dispatcher App Routes`?**
-  _High betweenness centrality (0.206) - this node is a cross-community bridge._
-- **Why does `build_app()` connect `Admin App Bootstrap & Tests` to `Auth Middleware & Request Security`, `Admin App Routes`?**
-  _High betweenness centrality (0.138) - this node is a cross-community bridge._
-- **Why does `_make_client()` connect `Async DB Test Fakes` to `Auth Middleware & Request Security`, `Admin App Bootstrap & Tests`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+- **Why does `make_app()` connect `make_app` to `make_engine`, `Message`, `_serve`, `Message`?**
+  _High betweenness centrality (0.204) - this node is a cross-community bridge._
+- **Why does `SqlAlchemyUnitOfWork` connect `SqlAlchemyUnitOfWork` to `Message`, `Message`, `Message`?**
+  _High betweenness centrality (0.112) - this node is a cross-community bridge._
+- **Why does `build_app()` connect `make_app` to `events`?**
+  _High betweenness centrality (0.108) - this node is a cross-community bridge._
 - **Are the 9 inferred relationships involving `make_app()` (e.g. with `build_app()` and `build_app()`) actually correct?**
   _`make_app()` has 9 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `stelo-admin`, `stelo-dispatcher`, `options` to the rest of the system?**
+- **Are the 2 inferred relationships involving `events()` (e.g. with `patch_elements()` and `patch_signals()`) actually correct?**
+  _`events()` has 2 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 4 inferred relationships involving `SqlAlchemyUnitOfWork` (e.g. with `test_commit_marks_transaction_committed_and_closes_connection()` and `test_exception_in_block_rolls_back_and_still_closes()`) actually correct?**
+  _`SqlAlchemyUnitOfWork` has 4 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `stelo-admin`, `stelo-dispatcher`, `stelo-inbox` to the rest of the system?**
   _14 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Auth Middleware & Request Security` be split into smaller, more focused modules?**
-  _Cohesion score 0.06183574879227053 - nodes in this community are weakly interconnected._
-- **Should `Admin App Routes` be split into smaller, more focused modules?**
-  _Cohesion score 0.08780487804878048 - nodes in this community are weakly interconnected._
