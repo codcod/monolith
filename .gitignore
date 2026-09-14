@@ -29,3 +29,11 @@ htmlcov/
 
 # AI
 .claude
+
+# Graphify — cost.json is local only; cache/ is optional (commit for speed,
+# skip to keep repo small); .graphify_python/.graphify_root hold this
+# machine's absolute paths, never portable
+graphify-out/cost.json
+graphify-out/cache/
+graphify-out/.graphify_python
+graphify-out/.graphify_root
