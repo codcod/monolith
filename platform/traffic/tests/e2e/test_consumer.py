@@ -1,29 +1,39 @@
-from typing import Self
-
 from aiohttp import web
 from aiohttp.test_utils import TestClient, TestServer
-from stelo.traffic import app as traffic_app
+from stelo.traffic.entrypoints import app as traffic_app
+
+
+class FakeTransaction:
+    def __init__(self) -> None:
+        self.committed = False
+
+    async def commit(self) -> None:
+        self.committed = True
+
+    async def rollback(self) -> None:
+        pass
 
 
 class FakeConnection:
     def __init__(self) -> None:
         self.inserted: list = []
+        self.transaction = FakeTransaction()
 
-    async def __aenter__(self) -> Self:
-        return self
-
-    async def __aexit__(self, *exc: object) -> bool:
-        return False
+    async def begin(self) -> FakeTransaction:
+        return self.transaction
 
     async def execute(self, stmt) -> None:
         self.inserted.append(stmt)
+
+    async def close(self) -> None:
+        pass
 
 
 class FakeEngine:
     def __init__(self) -> None:
         self.connection = FakeConnection()
 
-    def begin(self) -> FakeConnection:
+    async def connect(self) -> FakeConnection:
         return self.connection
 
 
@@ -55,7 +65,7 @@ async def test_process_traffic_in_inserts_and_republishes(monkeypatch):
         published.append((stream, message))
 
     monkeypatch.setattr(traffic_app, 'consume', fake_consume)
-    monkeypatch.setattr(traffic_app, 'publish', fake_publish)
+    monkeypatch.setattr(traffic_app, 'stream_publish', fake_publish)
 
     engine = FakeEngine()
     app = {traffic_app.DB_KEY: engine, traffic_app.RABBIT_KEY: object()}
@@ -63,6 +73,7 @@ async def test_process_traffic_in_inserts_and_republishes(monkeypatch):
     await traffic_app.process_traffic_in(app)
 
     assert len(engine.connection.inserted) == 1
+    assert engine.connection.transaction.committed
     assert len(published) == 1
     stream, message = published[0]
     assert stream == 'dispatch-in'

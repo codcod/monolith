@@ -3,11 +3,11 @@ import contextlib
 from pathlib import Path
 
 from aiohttp import web
+from stelo.admin import render
+from stelo.admin.adapters import metrics
+from stelo.admin.datastar import patch_elements, patch_signals
 from stelo.base.config import Config
 from stelo.base.webapp import DB_KEY, make_app
-
-from . import metrics, render
-from .datastar import patch_elements, patch_signals
 
 routes = web.RouteTableDef()
 STATIC_DIR = Path('static')

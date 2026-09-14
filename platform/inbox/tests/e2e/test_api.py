@@ -1,31 +1,41 @@
-from typing import Self
-
 from aiohttp import web
 from aiohttp.test_utils import TestClient, TestServer
 from stelo.base.security import auth_middleware, request_id_middleware
 from stelo.base.webapp import DB_KEY, RABBIT_KEY
-from stelo.inbox import app as inbox_app
+from stelo.inbox.entrypoints import app as inbox_app
+
+
+class FakeTransaction:
+    def __init__(self) -> None:
+        self.committed = False
+
+    async def commit(self) -> None:
+        self.committed = True
+
+    async def rollback(self) -> None:
+        pass
 
 
 class FakeConnection:
     def __init__(self) -> None:
         self.inserted: list = []
+        self.transaction = FakeTransaction()
 
-    async def __aenter__(self) -> Self:
-        return self
-
-    async def __aexit__(self, *exc: object) -> bool:
-        return False
+    async def begin(self) -> FakeTransaction:
+        return self.transaction
 
     async def execute(self, stmt) -> None:
         self.inserted.append(stmt)
+
+    async def close(self) -> None:
+        pass
 
 
 class FakeEngine:
     def __init__(self) -> None:
         self.connection = FakeConnection()
 
-    def begin(self) -> FakeConnection:
+    async def connect(self) -> FakeConnection:
         return self.connection
 
 
@@ -35,7 +45,7 @@ def _make_client(monkeypatch):
     async def fake_publish(client, stream, message):
         published.append((stream, message))
 
-    monkeypatch.setattr(inbox_app, 'publish', fake_publish)
+    monkeypatch.setattr(inbox_app, 'stream_publish', fake_publish)
 
     app = web.Application(
         middlewares=[request_id_middleware, auth_middleware('secret')]
@@ -88,6 +98,7 @@ async def test_create_message_inserts_row_and_publishes(monkeypatch):
         assert 'id' in body
 
     assert len(engine.connection.inserted) == 1
+    assert engine.connection.transaction.committed
     assert len(published) == 1
     stream, message = published[0]
     assert stream == 'traffic-in'

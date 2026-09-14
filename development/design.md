@@ -86,7 +86,12 @@ different tables/columns per module's own concern:
 | `dispatcher` | `messages`     | id, channel, recipient, send_status, sent_at           |
 
 Connection: SQLAlchemy **core** (no ORM), async engine via `asyncpg`,
-built by one shared helper:
+built by one shared helper. Writes go through the Repository and Unit of
+Work patterns (Percival & Gregory, *Architecture Patterns with Python*) —
+see "Shared library: `stelo-base`" and "Per-module layout" below — kept
+Core-only rather than pulling in the SQLAlchemy ORM: Repository/UoW don't
+require a mapper, only a place to put "one transaction, one collection of
+domain objects."
 
 ```python
 # stelo-base
@@ -124,6 +129,8 @@ platform/stelo-base/
     webapp.py           # make_app()/run_in_background() + typed AppKeys
     channels.py         # Sender protocol + Sms/Email/WhatsApp stub senders
     messages.py         # shared Message TypedDict
+    repository.py       # AbstractRepository[T] — add()/get(), no DB-specific code
+    unit_of_work.py      # AbstractUnitOfWork + SqlAlchemyUnitOfWork (connection/transaction lifecycle)
   tests/                # unit tests for every module above
 ```
 
@@ -168,14 +175,35 @@ platform/stelo-base/
 
   SENDERS: dict[str, Sender] = {"sms": SmsSender(), "email": EmailSender(), "whatsapp": WhatsAppSender()}
   ```
+- **repository.py**: `AbstractRepository[T]` — `add(item)`/`get(id)`, no
+  DB-specific code. Concrete repositories (converting between a module's own
+  domain dataclass and its Core table) live in that module's own
+  `adapters/repository.py`, not here — there's no shared row shape to build
+  a generic SQLAlchemy implementation against.
+- **unit_of_work.py**: `AbstractUnitOfWork` (async context manager;
+  `__aexit__` rolls back unless `commit()` was called) plus
+  `SqlAlchemyUnitOfWork`, which owns one `AsyncConnection`/transaction for
+  the `async with` block's lifetime. Each module's own
+  `service_layer/unit_of_work.py` subclasses it, attaching its repositories
+  in `__aenter__`.
 
 ## Per-module layout (inbox as example, traffic/dispatcher mirror it)
+
+Each of inbox/traffic/dispatcher follows the layered structure from
+*Architecture Patterns with Python* (Percival & Gregory): `domain` (the
+module's own persisted entity — distinct from the wire-format `Message`
+crossing stream boundaries), `service_layer` (orchestration: builds the
+domain object, runs it through a Unit of Work, then calls an injected
+`publish`/`sender` side effect), `adapters` (the Core table + a Repository
+converting to/from the domain dataclass), `entrypoints` (thin aiohttp route
+handlers / stream-consumer loop, wiring a concrete `UnitOfWork` per
+request/message from `app[DB_KEY]`):
 
 ```
 platform/inbox/
   pyproject.toml       # hatchling; dependencies = ["stelo-base"]
   Dockerfile           # builds only this dir + stelo-base, no requirements.txt
-  justfile             # install/run/test/perf/migrate/fmt/lint/docker-build
+  justfile             # install/run/test/test-integration/perf/migrate/fmt/lint/docker-build
   alembic.ini
   bin/stelo-inbox
   config/config.toml
@@ -183,21 +211,42 @@ platform/inbox/
     env.py             # calls stelo.base.migrations.run_migrations_online
     versions/0001_...  # CREATE SCHEMA + create_table("messages", schema=...)
   src/stelo/inbox/
-    app.py             # routes: POST /messages, GET /health
+    domain/
+      model.py          # Message dataclass (id, channel, recipient, body, received_at)
+    service_layer/
+      services.py         # submit_message(channel, recipient, body, uow, publish)
+      unit_of_work.py       # InboxUnitOfWork(SqlAlchemyUnitOfWork)
+    adapters/
+      tables.py            # messages_table (plain Core sa.table(), not an ORM mapping)
+      repository.py          # SqlAlchemyMessageRepository(AbstractRepository[Message])
+    entrypoints/
+      app.py                 # routes: POST /messages, GET /health; build_app()
   tests/
-    test_app.py        # aiohttp test client, DB/rabbit faked
+    unit/test_services.py     # service_layer against an in-memory fake UoW/repository
+    integration/test_repository.py  # repository/UoW against a real Postgres, skipped by default
+    e2e/test_api.py             # aiohttp test client, DB/rabbit faked at app[DB_KEY]/[RABBIT_KEY]
     performance/k6/script.js
 ```
 
 - **inbox**: `POST /messages` validates `{channel, recipient, body}`,
-  generates `id`/`created_at`, INSERTs into `inbox.messages`, publishes to
-  `traffic-in`, returns `202` with the message id.
+  builds a domain `Message`, adds it via `InboxUnitOfWork.messages` and
+  commits, then publishes the wire-format shape to `traffic-in`; returns
+  `202` with the message id.
 - **traffic**: on startup, spawns a background task subscribing to
-  `traffic-in`; for each message, INSERTs into `traffic.messages`, publishes
-  unchanged to `dispatch-in`.
+  `traffic-in`; for each message, records a routing row via
+  `TrafficUnitOfWork`, then republishes unchanged to `dispatch-in`.
 - **dispatcher**: on startup, spawns a background task subscribing to
   `dispatch-in`; for each message, looks up `SENDERS[channel]`, calls
-  `.send()`, INSERTs into `dispatcher.messages` with `send_status="sent"`.
+  `.send()`, then records the outcome via `DispatcherUnitOfWork` with
+  `send_status="sent"`.
+
+`admin` is read-only (owns no schema, only queries the other three
+modules') and skips `domain`/`service_layer`/Repository/UoW — Repository/UoW
+model transactional writes to an aggregate, which doesn't apply to a pure
+read view. It keeps `adapters/` (its own read-only table refs in
+`read_model.py`, plus `metrics.py`'s query functions taking a plain
+`AsyncConnection`) and `entrypoints/app.py`; `render.py`/`datastar.py` stay
+at the package root as presentation helpers, not data access.
 
 ## Migrations
 
@@ -229,22 +278,30 @@ step in `compose.yaml`.
 ## Tests
 
 Every module (`stelo-base` included) has a `tests/` directory run with
-`pytest` (`asyncio_mode = "auto"` — no `@pytest.mark.asyncio` needed).
-Real infrastructure (Postgres, RabbitMQ) is never required to run the
-suite: DB/RabbitMQ access is faked at the same seam the app code uses
-(`app[DB_KEY]`/`app[RABBIT_KEY]`, or by monkeypatching `publish`/`consume`
-in the module under test), so tests stay fast and don't need `docker
-compose up` first.
+`pytest` (`asyncio_mode = "auto"` — no `@pytest.mark.asyncio` needed). The
+default `just <module>::test` never requires real infrastructure (Postgres,
+RabbitMQ) — inbox/traffic/dispatcher split their tests into three tiers,
+mirroring *Architecture Patterns with Python*'s layout:
+
+- `unit/`: `service_layer` exercised directly against an in-memory fake
+  `UnitOfWork`/repository — no DB, no aiohttp.
+- `integration/`: the real `SqlAlchemyMessageRepository`/`UnitOfWork`
+  against a live Postgres — the one tier that isn't free, so it's skipped
+  unless `RUN_INTEGRATION_TESTS=1` (run it via `just <module>::test-integration`,
+  after `just up`).
+- `e2e/`: aiohttp test client (inbox) / consumer function called directly
+  (traffic, dispatcher), with DB/RabbitMQ faked at the same seam the app
+  code uses (`app[DB_KEY]`/`app[RABBIT_KEY]`, or by monkeypatching
+  `consume`/`stream_publish` in the entrypoints module under test).
+
+`stelo-base` and `admin` keep a flatter split (no `integration/` tier):
 
 - `stelo-base`: unit tests per helper (`channels`, `config`, `db`,
-  `security`, `streams`) — the shared library is the one place with real
-  unit-testable logic in isolation.
-- `inbox`: an aiohttp test client drives `/health` and `/messages`
-  (auth rejection, payload validation, and the happy path — row inserted,
-  message published — against fakes).
-- `traffic`/`dispatcher`: `/health` over an aiohttp test client, plus their
-  consumer function (`process_traffic_in`/`process_dispatch_in`) called
-  directly against a fake `consume`/`publish`/DB engine.
+  `security`, `streams`, `repository`, `unit_of_work`) — the shared library
+  is the one place with real unit-testable logic in isolation.
+- `admin`: `unit/` covers `render.py`/`datastar.py`/`adapters/metrics.py`
+  (pure functions and query builders against fake connections); `e2e/`
+  drives its routes over an aiohttp test client.
 
 ## Performance testing
 
@@ -264,7 +321,9 @@ a `tests/performance/k6/script.js`, run against a live instance
 
 Every module has its own `justfile` (recipes grouped with `[group(...)]`
 into `dev`/`test`/`db`/`quality`/`docker`): `install` (venv + `stelo-base`
-+ itself, editable), `run`, `test`, `perf` (k6), `migrate`/`migration
++ itself, editable), `run`, `test`, `test-integration` (inbox/traffic/
+dispatcher only — repository/UoW against a real Postgres, needs `just up`
+first), `perf` (k6), `migrate`/`migration
 <name>`/`downgrade`, `fmt`/`lint`, `docker-build`. The repo root `justfile`
 pulls every module in as a `mod` (`just inbox::test`, `just
 stelo_base::lint`, …) and adds repo-wide `up`/`down`/`logs` (Docker

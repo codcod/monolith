@@ -3,7 +3,7 @@ import typing as tp
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncConnection
 
-from .tables import dispatcher_messages, inbox_messages, traffic_messages
+from .read_model import dispatcher_messages, inbox_messages, traffic_messages
 
 Channel = tp.Literal['sms', 'email', 'whatsapp']
 

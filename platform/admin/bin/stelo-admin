@@ -4,7 +4,7 @@ import argparse
 
 from aiohttp import web
 
-from stelo.admin.app import build_app
+from stelo.admin.entrypoints.app import build_app
 from stelo.base.config import read_config, setup_app
 
 if __name__ == "__main__":

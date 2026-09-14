@@ -8,7 +8,7 @@ import sys
 
 from aiohttp import web
 from stelo.base.config import Config, read_config, setup_app
-from stelo.inbox.app import build_app
+from stelo.inbox.entrypoints.app import build_app
 
 
 def _serve_one(config: Config) -> None:

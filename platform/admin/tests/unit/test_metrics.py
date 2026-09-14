@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from types import SimpleNamespace
 
-from stelo.admin import metrics
+from stelo.admin.adapters import metrics
 
 
 class FakeResult:

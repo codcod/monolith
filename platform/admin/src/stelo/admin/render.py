@@ -8,7 +8,7 @@ import html
 
 import orjson
 
-from .metrics import ChannelCounts, Event
+from .adapters.metrics import ChannelCounts, Event
 
 STAGE_COLORS = {
     'received': 'var(--received)',

@@ -19,6 +19,12 @@ run: install
 test: install
     uv run --project {{ repo_root }} pytest -q
 
+# Repository/UoW against a real Postgres — needs `just up` first. Kept out
+# of the default `test` recipe so that one stays fast and docker-free.
+[group('test')]
+test-integration: install
+    RUN_INTEGRATION_TESTS=1 uv run --project {{ repo_root }} pytest tests/integration -q
+
 # Only exercises /health — traffic's real job is a stream consumer, which
 # k6 doesn't drive. Needs a live instance: `just up`, or `just run`.
 [group('test')]

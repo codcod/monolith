@@ -5,7 +5,7 @@ import argparse
 from aiohttp import web
 
 from stelo.base.config import read_config, setup_app
-from stelo.dispatcher.app import build_app
+from stelo.dispatcher.entrypoints.app import build_app
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

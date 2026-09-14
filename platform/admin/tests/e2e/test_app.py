@@ -1,5 +1,5 @@
 from aiohttp.test_utils import TestClient, TestServer
-from stelo.admin.app import build_app
+from stelo.admin.entrypoints.app import build_app
 
 
 def _config() -> dict:
