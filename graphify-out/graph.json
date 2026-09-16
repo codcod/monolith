@@ -879,7 +879,7 @@
       "file_type": "code",
       "norm_label": "build_app()",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L105"
+      "source_location": "L109"
     },
     {
       "id": "platform_admin_tests_e2e_test_app_config",
@@ -1719,7 +1719,7 @@
       "file_type": "code",
       "norm_label": "run_migrations_online()",
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L39"
+      "source_location": "L41"
     },
     {
       "id": "platform_stelo_base_tests_test_db_test_make_engine_returns_async_engine_without_connecting",
@@ -2562,40 +2562,76 @@
       "source_location": "L55"
     },
     {
-      "id": "platform_admin_tests_unit_test_datastar_test_patch_elements_encodes_each_line_and_ends_with_blank_line",
-      "label": "test_patch_elements_encodes_each_line_and_ends_with_blank_line()",
+      "id": "platform_admin_tests_unit_test_render_test_channel_bars_handles_no_rows",
+      "label": "test_channel_bars_handles_no_rows()",
       "_callable": true,
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_datastar.py",
+      "community_name": "test_render.py",
       "file_type": "code",
-      "norm_label": "test_patch_elements_encodes_each_line_and_ends_with_blank_line()",
-      "source_file": "platform/admin/tests/unit/test_datastar.py",
-      "source_location": "L9"
+      "norm_label": "test_channel_bars_handles_no_rows()",
+      "source_file": "platform/admin/tests/unit/test_render.py",
+      "source_location": "L31"
     },
     {
-      "id": "platform_admin_tests_unit_test_datastar_test_patch_elements_includes_optional_selector_and_mode",
-      "label": "test_patch_elements_includes_optional_selector_and_mode()",
+      "id": "platform_admin_tests_unit_test_render_test_channel_bars_renders_sent_and_failed_counts",
+      "label": "test_channel_bars_renders_sent_and_failed_counts()",
       "_callable": true,
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_datastar.py",
+      "community_name": "test_render.py",
       "file_type": "code",
-      "norm_label": "test_patch_elements_includes_optional_selector_and_mode()",
-      "source_file": "platform/admin/tests/unit/test_datastar.py",
-      "source_location": "L20"
+      "norm_label": "test_channel_bars_renders_sent_and_failed_counts()",
+      "source_file": "platform/admin/tests/unit/test_render.py",
+      "source_location": "L24"
     },
     {
-      "id": "platform_admin_tests_unit_test_datastar_test_patch_signals_encodes_one_json_line",
-      "label": "test_patch_signals_encodes_one_json_line()",
+      "id": "platform_admin_tests_unit_test_render_test_chart_embeds_series_as_json_for_the_hover_script",
+      "label": "test_chart_embeds_series_as_json_for_the_hover_script()",
       "_callable": true,
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_datastar.py",
+      "community_name": "test_render.py",
       "file_type": "code",
-      "norm_label": "test_patch_signals_encodes_one_json_line()",
-      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "norm_label": "test_chart_embeds_series_as_json_for_the_hover_script()",
+      "source_file": "platform/admin/tests/unit/test_render.py",
+      "source_location": "L15"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_render_test_feed_rows_renders_stage_badge_and_id",
+      "label": "test_feed_rows_renders_stage_badge_and_id()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "test_render.py",
+      "file_type": "code",
+      "norm_label": "test_feed_rows_renders_stage_badge_and_id()",
+      "source_file": "platform/admin/tests/unit/test_render.py",
+      "source_location": "L35"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_render_test_spark_carries_its_own_target_id",
+      "label": "test_spark_carries_its_own_target_id()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "test_render.py",
+      "file_type": "code",
+      "norm_label": "test_spark_carries_its_own_target_id()",
+      "source_file": "platform/admin/tests/unit/test_render.py",
       "source_location": "L4"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_render_test_spark_handles_empty_history",
+      "label": "test_spark_handles_empty_history()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "test_render.py",
+      "file_type": "code",
+      "norm_label": "test_spark_handles_empty_history()",
+      "source_file": "platform/admin/tests/unit/test_render.py",
+      "source_location": "L10"
     },
     {
       "id": "platform_dispatcher_migrations_versions_057e6b8a161e_create_dispatcher_schema_downgrade",
@@ -2955,7 +2991,7 @@
       "file_type": "code",
       "norm_label": "events()",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L31"
+      "source_location": "L35"
     },
     {
       "id": "platform_admin_src_stelo_admin_entrypoints_app_health",
@@ -2967,7 +3003,7 @@
       "file_type": "code",
       "norm_label": "health()",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L21"
+      "source_location": "L23"
     },
     {
       "id": "platform_admin_src_stelo_admin_entrypoints_app_index",
@@ -2979,7 +3015,7 @@
       "file_type": "code",
       "norm_label": "index()",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L26"
+      "source_location": "L28"
     },
     {
       "id": "platform_admin_src_stelo_admin_render_channel_bars",
@@ -2991,7 +3027,7 @@
       "file_type": "code",
       "norm_label": "channel_bars()",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L102"
+      "source_location": "L108"
     },
     {
       "id": "platform_admin_src_stelo_admin_render_chart",
@@ -3003,7 +3039,7 @@
       "file_type": "code",
       "norm_label": "chart()",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L57"
+      "source_location": "L64"
     },
     {
       "id": "platform_admin_src_stelo_admin_render_chart_y_of",
@@ -3015,7 +3051,7 @@
       "file_type": "code",
       "norm_label": "y_of()",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L65"
+      "source_location": "L72"
     },
     {
       "id": "platform_admin_src_stelo_admin_render_feed_rows",
@@ -3027,7 +3063,7 @@
       "file_type": "code",
       "norm_label": "feed_rows()",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L124"
+      "source_location": "L126"
     },
     {
       "id": "platform_admin_src_stelo_admin_render_spark",
@@ -3039,7 +3075,43 @@
       "file_type": "code",
       "norm_label": "spark()",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L32"
+      "source_location": "L37"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_datastar_test_patch_elements_encodes_each_line_and_ends_with_blank_line",
+      "label": "test_patch_elements_encodes_each_line_and_ends_with_blank_line()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "events",
+      "file_type": "code",
+      "norm_label": "test_patch_elements_encodes_each_line_and_ends_with_blank_line()",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L9"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_datastar_test_patch_elements_includes_optional_selector_and_mode",
+      "label": "test_patch_elements_includes_optional_selector_and_mode()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "events",
+      "file_type": "code",
+      "norm_label": "test_patch_elements_includes_optional_selector_and_mode()",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L20"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_datastar_test_patch_signals_encodes_one_json_line",
+      "label": "test_patch_signals_encodes_one_json_line()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "events",
+      "file_type": "code",
+      "norm_label": "test_patch_signals_encodes_one_json_line()",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L4"
     },
     {
       "id": "platform_stelo_base_src_stelo_base_unit_of_work_abstractunitofwork_aenter",
@@ -3484,78 +3556,6 @@
       "norm_label": "test_stage_totals_treats_null_count_as_zero()",
       "source_file": "platform/admin/tests/unit/test_metrics.py",
       "source_location": "L53"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render_test_channel_bars_handles_no_rows",
-      "label": "test_channel_bars_handles_no_rows()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_channel_bars_handles_no_rows()",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L31"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render_test_channel_bars_renders_sent_and_failed_counts",
-      "label": "test_channel_bars_renders_sent_and_failed_counts()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_channel_bars_renders_sent_and_failed_counts()",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L24"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render_test_chart_embeds_series_as_json_for_the_hover_script",
-      "label": "test_chart_embeds_series_as_json_for_the_hover_script()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_chart_embeds_series_as_json_for_the_hover_script()",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L15"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render_test_feed_rows_renders_stage_badge_and_id",
-      "label": "test_feed_rows_renders_stage_badge_and_id()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_feed_rows_renders_stage_badge_and_id()",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L35"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render_test_spark_carries_its_own_target_id",
-      "label": "test_spark_carries_its_own_target_id()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_spark_carries_its_own_target_id()",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L4"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render_test_spark_handles_empty_history",
-      "label": "test_spark_handles_empty_history()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_spark_handles_empty_history()",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L10"
     },
     {
       "id": "platform_dispatcher_migrations_env_get_dsn",
@@ -4274,6 +4274,17 @@
       "source_location": "L1"
     },
     {
+      "id": "asyncengine",
+      "label": "AsyncEngine",
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "make_engine",
+      "file_type": "code",
+      "norm_label": "asyncengine",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "connection",
       "label": "Connection",
       "_origin": "ast",
@@ -4329,17 +4340,6 @@
       "source_location": "L1"
     },
     {
-      "id": "platform_stelo_base_src_stelo_base_migrations_py_asyncengine",
-      "label": "AsyncEngine",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "make_engine",
-      "file_type": "code",
-      "norm_label": "asyncengine",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "platform_stelo_base_tests_test_db",
       "label": "test_db.py",
       "_origin": "ast",
@@ -4362,7 +4362,7 @@
       "source_location": "L5"
     },
     {
-      "id": "platform_stelo_base_src_stelo_base_migrations_rationale_40",
+      "id": "platform_stelo_base_src_stelo_base_migrations_rationale_42",
       "label": "Standard Alembic `env.py` online-mode entry point for an async SQLAlchemy\u2026",
       "_origin": "ast",
       "community": 13,
@@ -4370,7 +4370,7 @@
       "file_type": "rationale",
       "norm_label": "standard alembic `env.py` online-mode entry point for an async sqlalchemy...",
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L40"
+      "source_location": "L42"
     },
     {
       "id": "platform_stelo_base_tests_test_streams",
@@ -4384,7 +4384,7 @@
       "source_location": "L1"
     },
     {
-      "id": "platform_stelo_base_tests_test_streams_py_self",
+      "id": "self",
       "label": "Self",
       "_origin": "ast",
       "community": 14,
@@ -4861,14 +4861,25 @@
       "source_location": "L1"
     },
     {
-      "id": "platform_admin_tests_unit_test_datastar",
-      "label": "test_datastar.py",
+      "id": "platform_admin_bin_stelo_admin",
+      "label": "stelo-admin",
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_datastar.py",
+      "community_name": "test_render.py",
       "file_type": "code",
-      "norm_label": "test_datastar.py",
-      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "norm_label": "stelo-admin",
+      "source_file": "platform/admin/bin/stelo-admin",
+      "source_location": "L1"
+    },
+    {
+      "id": "platform_admin_tests_unit_test_render",
+      "label": "test_render.py",
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "test_render.py",
+      "file_type": "code",
+      "norm_label": "test_render.py",
+      "source_file": "platform/admin/tests/unit/test_render.py",
       "source_location": "L1"
     },
     {
@@ -5265,13 +5276,13 @@
       "source_location": "L1"
     },
     {
-      "id": "asyncconnection",
-      "label": "AsyncConnection",
+      "id": "application",
+      "label": "Application",
       "_origin": "ast",
       "community": 34,
-      "community_name": "AsyncConnection",
+      "community_name": "Application",
       "file_type": "code",
-      "norm_label": "asyncconnection",
+      "norm_label": "application",
       "source_file": "",
       "source_location": ""
     },
@@ -5334,13 +5345,13 @@
       "source_location": ""
     },
     {
-      "id": "fileresponse",
-      "label": "FileResponse",
+      "id": "asyncconnection",
+      "label": "AsyncConnection",
       "_origin": "ast",
       "community": 4,
       "community_name": "events",
       "file_type": "code",
-      "norm_label": "fileresponse",
+      "norm_label": "asyncconnection",
       "source_file": "",
       "source_location": ""
     },
@@ -5354,17 +5365,6 @@
       "norm_label": "metrics.py",
       "source_file": "platform/admin/src/stelo/admin/adapters/metrics.py",
       "source_location": "L1"
-    },
-    {
-      "id": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
-      "label": "AsyncConnection",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "events",
-      "file_type": "code",
-      "norm_label": "asyncconnection",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "platform_admin_src_stelo_admin_adapters_read_model",
@@ -5466,6 +5466,17 @@
       "source_location": "L1"
     },
     {
+      "id": "platform_admin_tests_unit_test_datastar",
+      "label": "test_datastar.py",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "events",
+      "file_type": "code",
+      "norm_label": "test_datastar.py",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L1"
+    },
+    {
       "id": "platform_admin_src_stelo_admin_adapters_metrics_rationale_45",
       "label": "Age of the oldest inbox row with no matching traffic row yet \u2014 how long the\u2026",
       "_origin": "ast",
@@ -5499,7 +5510,7 @@
       "source_location": "L1"
     },
     {
-      "id": "platform_admin_src_stelo_admin_entrypoints_app_rationale_32",
+      "id": "platform_admin_src_stelo_admin_entrypoints_app_rationale_36",
       "label": "Datastar SSE feed: every tick, query current pipeline state and push one patch-\u2026",
       "_origin": "ast",
       "community": 4,
@@ -5507,21 +5518,21 @@
       "file_type": "rationale",
       "norm_label": "datastar sse feed: every tick, query current pipeline state and push one patch-...",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L32"
+      "source_location": "L36"
     },
     {
       "id": "platform_admin_src_stelo_admin_render_rationale_1",
-      "label": "Tiny f-string HTML/SVG builders for the fragments pushed over SSE \u2014 no\u2026",
+      "label": "Fragment builders for the markup pushed over SSE. Math (coordinates, colors,\u2026",
       "_origin": "ast",
       "community": 4,
       "community_name": "events",
       "file_type": "rationale",
-      "norm_label": "tiny f-string html/svg builders for the fragments pushed over sse \u2014 no...",
+      "norm_label": "fragment builders for the markup pushed over sse. math (coordinates, colors,...",
       "source_file": "platform/admin/src/stelo/admin/render.py",
       "source_location": "L1"
     },
     {
-      "id": "platform_admin_src_stelo_admin_render_rationale_35",
+      "id": "platform_admin_src_stelo_admin_render_rationale_40",
       "label": "The returned <svg> carries `elem_id` so Datastar's default fragment merge\u2026",
       "_origin": "ast",
       "community": 4,
@@ -5529,7 +5540,7 @@
       "file_type": "rationale",
       "norm_label": "the returned <svg> carries `elem_id` so datastar's default fragment merge...",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L35"
+      "source_location": "L40"
     },
     {
       "id": "platform_admin_src_stelo_admin_app_py_request",
@@ -6104,26 +6115,15 @@
       "source_location": ""
     },
     {
-      "id": "platform_admin_bin_stelo_admin",
-      "label": "stelo-admin",
+      "id": "fileresponse",
+      "label": "FileResponse",
       "_origin": "ast",
       "community": 83,
-      "community_name": "test_render.py",
+      "community_name": "FileResponse",
       "file_type": "code",
-      "norm_label": "stelo-admin",
-      "source_file": "platform/admin/bin/stelo-admin",
-      "source_location": "L1"
-    },
-    {
-      "id": "platform_admin_tests_unit_test_render",
-      "label": "test_render.py",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "test_render.py",
-      "file_type": "code",
-      "norm_label": "test_render.py",
-      "source_file": "platform/admin/tests/unit/test_render.py",
-      "source_location": "L1"
+      "norm_label": "fileresponse",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "platform_dispatcher_src_stelo_dispatcher_entrypoints_app_py_config",
@@ -6181,13 +6181,13 @@
       "source_location": ""
     },
     {
-      "id": "streamresponse",
-      "label": "StreamResponse",
+      "id": "channelcounts",
+      "label": "ChannelCounts",
       "_origin": "ast",
       "community": 89,
-      "community_name": "StreamResponse",
+      "community_name": "ChannelCounts",
       "file_type": "code",
-      "norm_label": "streamresponse",
+      "norm_label": "channelcounts",
       "source_file": "",
       "source_location": ""
     },
@@ -6377,6 +6377,105 @@
       "norm_label": "the dsn comes from the module's own config.toml (same file the app reads), not...",
       "source_file": "platform/traffic/migrations/env.py",
       "source_location": "L30"
+    },
+    {
+      "id": "config",
+      "label": "Config",
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "Config",
+      "file_type": "code",
+      "norm_label": "config",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "event",
+      "label": "Event",
+      "_origin": "ast",
+      "community": 91,
+      "community_name": "Event",
+      "file_type": "code",
+      "norm_label": "event",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "get",
+      "label": "get",
+      "_origin": "ast",
+      "community": 92,
+      "community_name": "get",
+      "file_type": "code",
+      "norm_label": "get",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "label": "AsyncConnection",
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "AsyncConnection",
+      "file_type": "code",
+      "norm_label": "asyncconnection",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "platform_stelo_base_src_stelo_base_migrations_py_asyncengine",
+      "label": "AsyncEngine",
+      "_origin": "ast",
+      "community": 94,
+      "community_name": "AsyncEngine",
+      "file_type": "code",
+      "norm_label": "asyncengine",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "platform_stelo_base_tests_test_streams_py_self",
+      "label": "Self",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "Self",
+      "file_type": "code",
+      "norm_label": "self",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "request",
+      "label": "Request",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "Request",
+      "file_type": "code",
+      "norm_label": "request",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "response",
+      "label": "Response",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "Response",
+      "file_type": "code",
+      "norm_label": "response",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "streamresponse",
+      "label": "StreamResponse",
+      "_origin": "ast",
+      "community": 98,
+      "community_name": "StreamResponse",
+      "file_type": "code",
+      "norm_label": "streamresponse",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "development_design_admin",
@@ -7234,36 +7333,6 @@
       "source_url": null
     },
     {
-      "id": "platform_admin_static_index_chart_tooltip",
-      "label": "Chart hover crosshair/tooltip handler",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Reusable Python module CI workflow",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "chart hover crosshair/tooltip handler",
-      "source_file": "platform/admin/static/index.html",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "platform_admin_static_index_relay_console",
-      "label": "Relay Console admin dashboard",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Reusable Python module CI workflow",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "relay console admin dashboard",
-      "source_file": "platform/admin/static/index.html",
-      "source_location": null,
-      "source_url": null
-    },
-    {
       "id": "changelog_docker_compose_stack",
       "label": "Docker Compose stack addition",
       "_origin": "semantic",
@@ -7305,21 +7374,6 @@
       "file_type": "concept",
       "norm_label": "stelo-platform uv workspace",
       "source_file": "PACKAGING.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "platform_admin_static_index_events_sse",
-      "label": "/events SSE feed (Datastar data-init)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 6,
-      "community_name": "Reusable Python module CI workflow",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "/events sse feed (datastar data-init)",
-      "source_file": "platform/admin/static/index.html",
       "source_location": null,
       "source_url": null
     },
@@ -7492,102 +7546,6 @@
   "links": [
     {
       "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_oldest_unprocessed_age_seconds",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L55",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_latency_percentiles_ms",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_error_rate",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L57",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_channel_breakdown",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L58",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_recent_events",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L59",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_datastar_patch_signals",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L89",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_render_spark",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L92",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
-      "target": "platform_admin_src_stelo_admin_datastar_patch_elements",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L95",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
       "target": "platform_admin_src_stelo_admin_render_chart",
       "relation": "calls",
       "_origin": "ast",
@@ -7595,7 +7553,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L96",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -7607,7 +7565,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L97",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
@@ -7619,7 +7577,103 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L98",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_adapters_metrics_oldest_unprocessed_age_seconds",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_adapters_metrics_latency_percentiles_ms",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_adapters_metrics_error_rate",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_adapters_metrics_channel_breakdown",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_adapters_metrics_recent_events",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_datastar_patch_signals",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_render_spark",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_events",
+      "target": "platform_admin_src_stelo_admin_datastar_patch_elements",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -8339,7 +8393,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L47",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -8351,7 +8405,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L48",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -8807,7 +8861,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L65",
+      "source_location": "L72",
       "weight": 1.0
     },
     {
@@ -8819,7 +8873,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L30",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -8831,7 +8885,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -8843,7 +8897,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L25",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -9131,7 +9185,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L11",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -9143,7 +9197,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L11",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -9155,7 +9209,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L11",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -9167,7 +9221,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L11",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -9419,7 +9473,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L9",
+      "source_location": "L11",
       "weight": 1.0
     },
     {
@@ -9431,7 +9485,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L11",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -9508,7 +9562,7 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_adapters_metrics_channel_breakdown",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "target": "asyncconnection",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9520,7 +9574,7 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_adapters_metrics_error_rate",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "target": "asyncconnection",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9532,7 +9586,7 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_adapters_metrics_latency_percentiles_ms",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "target": "asyncconnection",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9544,7 +9598,7 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_adapters_metrics_oldest_unprocessed_age_seconds",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "target": "asyncconnection",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9556,7 +9610,7 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_adapters_metrics_recent_events",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "target": "asyncconnection",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9568,7 +9622,7 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_adapters_metrics_stage_totals",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics_py_asyncconnection",
+      "target": "asyncconnection",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9587,7 +9641,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L31",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -9599,7 +9653,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -9611,7 +9665,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -9904,7 +9958,7 @@
     },
     {
       "source": "platform_stelo_base_src_stelo_base_migrations_run_async_migrations",
-      "target": "metadata",
+      "target": "asyncengine",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9916,7 +9970,7 @@
     },
     {
       "source": "platform_stelo_base_src_stelo_base_migrations_run_async_migrations",
-      "target": "platform_stelo_base_src_stelo_base_migrations_py_asyncengine",
+      "target": "metadata",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9935,7 +9989,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L39",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -10151,7 +10205,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L105",
+      "source_location": "L109",
       "weight": 1.0
     },
     {
@@ -10163,7 +10217,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L31",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -10175,19 +10229,19 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
       "source": "platform_admin_src_stelo_admin_entrypoints_app_index",
-      "target": "fileresponse",
+      "target": "platform_admin_src_stelo_admin_entrypoints_app_py_response",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -10492,7 +10546,7 @@
     },
     {
       "source": "platform_stelo_base_tests_test_streams_fakepublisher_aenter",
-      "target": "platform_stelo_base_tests_test_streams_py_self",
+      "target": "self",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -10636,18 +10690,6 @@
     },
     {
       "source": "platform_admin_src_stelo_admin_entrypoints_app",
-      "target": "platform_admin_src_stelo_admin_adapters_metrics",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "submodule_import",
-      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L10",
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app",
       "target": "platform_admin_src_stelo_admin_render",
       "relation": "imports_from",
       "_origin": "ast",
@@ -10655,7 +10697,19 @@
       "confidence_score": 1.0,
       "context": "submodule_import",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L9",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_src_stelo_admin_entrypoints_app",
+      "target": "platform_admin_src_stelo_admin_adapters_metrics",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "submodule_import",
+      "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
+      "source_location": "L12",
       "weight": 1.0
     },
     {
@@ -10823,7 +10877,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L105",
+      "source_location": "L109",
       "weight": 1.0
     },
     {
@@ -10834,7 +10888,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -10845,7 +10899,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -10856,7 +10910,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L31",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -10867,7 +10921,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L102",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -10878,7 +10932,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L124",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -10889,7 +10943,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L32",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -10900,7 +10954,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L57",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -12022,7 +12076,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L39",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -13962,14 +14016,14 @@
       "weight": 1.0
     },
     {
-      "source": "platform_admin_src_stelo_admin_entrypoints_app_rationale_32",
+      "source": "platform_admin_src_stelo_admin_entrypoints_app_rationale_36",
       "target": "platform_admin_src_stelo_admin_entrypoints_app_events",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L32",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -13984,14 +14038,14 @@
       "weight": 1.0
     },
     {
-      "source": "platform_admin_src_stelo_admin_render_rationale_35",
+      "source": "platform_admin_src_stelo_admin_render_rationale_40",
       "target": "platform_admin_src_stelo_admin_render_spark",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L35",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -14193,14 +14247,14 @@
       "weight": 1.0
     },
     {
-      "source": "platform_stelo_base_src_stelo_base_migrations_rationale_40",
+      "source": "platform_stelo_base_src_stelo_base_migrations_rationale_42",
       "target": "platform_stelo_base_src_stelo_base_migrations_run_migrations_online",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L40",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -14484,7 +14538,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "platform/stelo-base/src/stelo/base/migrations.py",
-      "source_location": "L35",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -14628,7 +14682,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L110",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -14701,6 +14755,42 @@
       "context": "call",
       "source_file": "platform/admin/tests/e2e/test_app.py",
       "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_tests_unit_test_datastar_test_patch_elements_encodes_each_line_and_ends_with_blank_line",
+      "target": "platform_admin_src_stelo_admin_datastar_patch_elements",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_tests_unit_test_datastar_test_patch_elements_includes_optional_selector_and_mode",
+      "target": "platform_admin_src_stelo_admin_datastar_patch_elements",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_admin_tests_unit_test_datastar_test_patch_signals_encodes_one_json_line",
+      "target": "platform_admin_src_stelo_admin_datastar_patch_signals",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/admin/tests/unit/test_datastar.py",
+      "source_location": "L5",
       "weight": 1.0
     },
     {
@@ -14920,6 +15010,66 @@
       "weight": 1.0
     },
     {
+      "source": "platform_stelo_base_tests_test_unit_of_work_test_abstract_unit_of_work_cannot_be_instantiated",
+      "target": "platform_stelo_base_src_stelo_base_unit_of_work_abstractunitofwork",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_stelo_base_tests_test_unit_of_work_test_commit_marks_transaction_committed_and_closes_connection",
+      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_stelo_base_tests_test_unit_of_work_test_exception_in_block_rolls_back_and_still_closes",
+      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_stelo_base_tests_test_unit_of_work_test_exiting_without_commit_rolls_back",
+      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "platform_stelo_base_tests_test_unit_of_work_test_rollback_after_commit_is_not_attempted_again",
+      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
       "source": "platform_stelo_base_tests_test_webapp_test_require_auth_defaults_to_protecting_routes",
       "target": "platform_stelo_base_src_stelo_base_webapp_make_app",
       "relation": "calls",
@@ -15096,7 +15246,7 @@
       "confidence_score": 0.95,
       "context": "generic_arg",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L102",
+      "source_location": "L108",
       "weight": 0.8
     },
     {
@@ -15108,7 +15258,7 @@
       "confidence_score": 0.95,
       "context": "generic_arg",
       "source_file": "platform/admin/src/stelo/admin/render.py",
-      "source_location": "L124",
+      "source_location": "L126",
       "weight": 0.8
     },
     {
@@ -15120,7 +15270,7 @@
       "confidence_score": 0.95,
       "context": "parameter_type",
       "source_file": "platform/admin/src/stelo/admin/entrypoints/app.py",
-      "source_location": "L105",
+      "source_location": "L109",
       "weight": 0.8
     },
     {
@@ -15362,61 +15512,6 @@
       "confidence_score": 0.95,
       "source_file": "platform/inbox/tests/unit/test_services.py",
       "source_location": "L9",
-      "weight": 0.8
-    },
-    {
-      "source": "platform_stelo_base_tests_test_unit_of_work_test_abstract_unit_of_work_cannot_be_instantiated",
-      "target": "platform_stelo_base_src_stelo_base_unit_of_work_abstractunitofwork",
-      "relation": "uses",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
-      "source_location": "L80",
-      "weight": 0.8
-    },
-    {
-      "source": "platform_stelo_base_tests_test_unit_of_work_test_commit_marks_transaction_committed_and_closes_connection",
-      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
-      "relation": "uses",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
-      "source_location": "L39",
-      "weight": 0.8
-    },
-    {
-      "source": "platform_stelo_base_tests_test_unit_of_work_test_exception_in_block_rolls_back_and_still_closes",
-      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
-      "relation": "uses",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
-      "source_location": "L59",
-      "weight": 0.8
-    },
-    {
-      "source": "platform_stelo_base_tests_test_unit_of_work_test_exiting_without_commit_rolls_back",
-      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
-      "relation": "uses",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
-      "source_location": "L49",
-      "weight": 0.8
-    },
-    {
-      "source": "platform_stelo_base_tests_test_unit_of_work_test_rollback_after_commit_is_not_attempted_again",
-      "target": "platform_stelo_base_src_stelo_base_unit_of_work_sqlalchemyunitofwork",
-      "relation": "uses",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "source_file": "platform/stelo-base/tests/test_unit_of_work.py",
-      "source_location": "L70",
       "weight": 0.8
     },
     {
@@ -16355,39 +16450,6 @@
       "weight": 1.0
     },
     {
-      "source": "platform_admin_static_index_chart_tooltip",
-      "target": "platform_admin_static_index_events_sse",
-      "relation": "references",
-      "_origin": "semantic",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "platform/admin/static/index.html",
-      "source_location": null,
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_static_index_relay_console",
-      "target": "platform_admin_static_index_chart_tooltip",
-      "relation": "references",
-      "_origin": "semantic",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "platform/admin/static/index.html",
-      "source_location": null,
-      "weight": 1.0
-    },
-    {
-      "source": "platform_admin_static_index_relay_console",
-      "target": "platform_admin_static_index_events_sse",
-      "relation": "references",
-      "_origin": "semantic",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "platform/admin/static/index.html",
-      "source_location": null,
-      "weight": 1.0
-    },
-    {
       "source": "readme_admin",
       "target": "readme_aiohttp",
       "relation": "references",
@@ -16718,17 +16780,6 @@
       "weight": 1.0
     },
     {
-      "source": "compose_admin_service",
-      "target": "platform_admin_static_index_relay_console",
-      "relation": "references",
-      "_origin": "semantic",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "source_file": "compose.yaml",
-      "source_location": null,
-      "weight": 1.0
-    },
-    {
       "source": "readme_alembic",
       "target": "development_design_alembic_migrations",
       "relation": "references",
@@ -16969,5 +17020,5 @@
       "source_file": "development/design.md"
     }
   ],
-  "built_at_commit": "30d6f13ffddc004dc721b2d27fd40a8732ff46cc"
+  "built_at_commit": "025e742c8d13fdd82e7046bf767fbe93a732199f"
 }

@@ -1,17 +1,17 @@
 # Graph Report - monolith  (2026-09-16)
 
 ## Corpus Check
-- 99 files · ~16,764 words
+- 99 files · ~16,914 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 35 file(s) not represented in the graph (top: (none) 18, .typed 5, .toml 4)
 
 ## Summary
-- 613 nodes · 824 edges · 90 communities (22 shown, 39 thin omitted)
-- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 109 edges (avg confidence: 0.89)
+- 619 nodes · 823 edges · 99 communities (22 shown, 49 thin omitted)
+- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 111 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `30d6f13f`
+- Built from commit: `025e742c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -46,7 +46,7 @@
 - dispatcher/tests/performance/k6/script.js
 - traffic/tests/performance/k6/script.js
 - rebuild-sandbox.sh
-- AsyncConnection
+- Application
 - stelo-platform
 - Application
 - Config
@@ -71,11 +71,21 @@
 - Request
 - Response
 - Self
+- FileResponse
 - Config
 - Config
 - Any
 - Config
 - Config
+- ChannelCounts
+- Config
+- Event
+- get
+- AsyncConnection
+- AsyncEngine
+- Self
+- Request
+- Response
 - StreamResponse
 
 ## God Nodes (most connected - your core abstractions)
@@ -83,10 +93,10 @@
 2. `events()` - 16 edges
 3. `SqlAlchemyUnitOfWork` - 15 edges
 4. `FakeConnection` - 13 edges
-5. `Message` - 12 edges
+5. `FakeResult` - 12 edges
 6. `Message` - 12 edges
 7. `Message` - 12 edges
-8. `FakeResult` - 12 edges
+8. `Message` - 12 edges
 9. `stelo-base shared library (design)` - 12 edges
 10. `Config` - 11 edges
 
@@ -95,11 +105,11 @@
   CHANGELOG.md → .github/workflows/python_reusable.yml
 - `src/-only type-check rationale` --semantically_similar_to--> `ty type-checking scoped to src/ only`  [INFERRED] [semantically similar]
   .github/workflows/python_reusable.yml → PACKAGING.md
-- `CI platform/admin workflow` --references--> `admin service (compose)`  [EXTRACTED]
-  .github/workflows/ci_admin.yml → compose.yaml
-- `admin service (compose)` --references--> `Relay Console admin dashboard`  [INFERRED]
-  compose.yaml → platform/admin/static/index.html
 - `admin module (Relay Console)` --references--> `admin module (design)`  [INFERRED]
+  README.md → development/design.md
+- `Alembic (per-module migrations)` --references--> `Independent per-module Alembic migration history (own schema, own alembic_version)`  [INFERRED]
+  README.md → development/design.md
+- `dispatcher module` --references--> `dispatcher module (design)`  [INFERRED]
   README.md → development/design.md
 
 ## Import Cycles
@@ -112,7 +122,7 @@
 - **Message pipeline: inbox → traffic → dispatcher, observed by admin** — readme_inbox, readme_traffic, readme_dispatcher, readme_admin [EXTRACTED 1.00]
 - **Repository/UnitOfWork pattern implementation group** — development_design_stelo_base, development_design_repository_pattern, development_design_unit_of_work_pattern, development_design_sqlalchemy_core [INFERRED 0.85]
 
-## Communities (90 total, 39 thin omitted)
+## Communities (99 total, 49 thin omitted)
 
 ### Community 0 - "Message"
 Cohesion: 0.07
@@ -131,8 +141,8 @@ Cohesion: 0.08
 Nodes (26): Channel, AsyncConnection, Message, SqlAlchemyMessageRepository, Message, inbox's own intake record — its row in `inbox.messages`. Distinct from…, create_message(), health() (+18 more)
 
 ### Community 4 - "events"
-Cohesion: 0.10
-Nodes (31): FileResponse, channel_breakdown(), ChannelCounts, error_rate(), Event, latency_percentiles_ms(), oldest_unprocessed_age_seconds(), AsyncConnection (+23 more)
+Cohesion: 0.09
+Nodes (33): AsyncConnection, channel_breakdown(), ChannelCounts, error_rate(), Event, latency_percentiles_ms(), oldest_unprocessed_age_seconds(), Age of the oldest inbox row with no matching traffic row yet — how long the… (+25 more)
 
 ### Community 5 - "stelo-base shared library (design)"
 Cohesion: 0.11
@@ -140,7 +150,7 @@ Nodes (39): CHANGELOG.md, admin module (design), Independent per-module Alembic 
 
 ### Community 6 - "Reusable Python module CI workflow"
 Cohesion: 0.09
-Nodes (35): rbfly transitive Cython build dependency note, CI platform/admin workflow, CI platform/dispatcher workflow, CI platform/inbox workflow, CI platform/stelo-base workflow, CI platform/traffic workflow, src/-only type-check rationale, --project/--package uv sync scoping rationale (+27 more)
+Nodes (32): rbfly transitive Cython build dependency note, CI platform/admin workflow, CI platform/dispatcher workflow, CI platform/inbox workflow, CI platform/stelo-base workflow, CI platform/traffic workflow, src/-only type-check rationale, --project/--package uv sync scoping rationale (+24 more)
 
 ### Community 7 - "SqlAlchemyUnitOfWork"
 Cohesion: 0.09
@@ -168,11 +178,11 @@ Nodes (5): FakeConnection, FakeEngine, FakeTransaction, test_health_ok(), test_p
 
 ### Community 13 - "make_engine"
 Cohesion: 0.20
-Nodes (11): Connection, MetaData, make_engine(), AsyncEngine, Build an async SQLAlchemy core engine for a module's database. All modules…, _do_run_migrations(), AsyncEngine, Standard Alembic `env.py` online-mode entry point for an async SQLAlchemy… (+3 more)
+Nodes (11): AsyncEngine, Connection, MetaData, make_engine(), AsyncEngine, Build an async SQLAlchemy core engine for a module's database. All modules…, _do_run_migrations(), Standard Alembic `env.py` online-mode entry point for an async SQLAlchemy… (+3 more)
 
 ### Community 14 - "FakeClient"
 Cohesion: 0.16
-Nodes (6): FakeClient, FakePublisher, Self, Stands in for `rbfly.streams.StreamsClient` so the wrapper's create/…, test_consume_creates_stream_and_decodes_json(), test_publish_creates_stream_and_sends_json()
+Nodes (6): FakeClient, FakePublisher, Stands in for `rbfly.streams.StreamsClient` so the wrapper's create/…, test_consume_creates_stream_and_decodes_json(), test_publish_creates_stream_and_sends_json(), Self
 
 ### Community 15 - "InMemoryRepository"
 Cohesion: 0.18
@@ -203,9 +213,9 @@ Cohesion: 0.31
 Nodes (4): FakeUnitOfWork, _noop_publish(), test_route_message_adds_a_routing_row_and_commits(), test_route_message_republishes_with_status_routed()
 
 ## Knowledge Gaps
-- **23 isolated node(s):** `stelo-admin`, `stelo-dispatcher`, `stelo-inbox`, `stelo-traffic`, `stelo-platform` (+18 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 275 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **39 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **23 isolated node(s):** `stelo-admin`, `stelo-dispatcher`, `stelo-inbox`, `stelo-traffic`, `CHANNELS` (+18 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 280 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **49 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -213,14 +223,14 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `make_app()` connect `make_app` to `Message`, `Config`, `Message`, `make_engine`?**
   _High betweenness centrality (0.171) - this node is a cross-community bridge._
 - **Why does `SqlAlchemyUnitOfWork` connect `SqlAlchemyUnitOfWork` to `Message`, `Message`, `Message`?**
-  _High betweenness centrality (0.116) - this node is a cross-community bridge._
+  _High betweenness centrality (0.115) - this node is a cross-community bridge._
 - **Why does `build_app()` connect `make_app` to `Config`, `events`?**
-  _High betweenness centrality (0.096) - this node is a cross-community bridge._
+  _High betweenness centrality (0.100) - this node is a cross-community bridge._
 - **Are the 10 inferred relationships involving `make_app()` (e.g. with `build_app()` and `build_app()`) actually correct?**
   _`make_app()` has 10 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 4 inferred relationships involving `SqlAlchemyUnitOfWork` (e.g. with `test_commit_marks_transaction_committed_and_closes_connection()` and `test_exception_in_block_rolls_back_and_still_closes()`) actually correct?**
   _`SqlAlchemyUnitOfWork` has 4 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 3 inferred relationships involving `Message` (e.g. with `SqlAlchemyMessageRepository` and `_a_message()`) actually correct?**
-  _`Message` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `stelo-admin`, `stelo-dispatcher`, `stelo-inbox` to the rest of the system?**
   _23 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Message` be split into smaller, more focused modules?**
+  _Cohesion score 0.07317073170731707 - nodes in this community are weakly interconnected._
