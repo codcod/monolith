@@ -9,30 +9,30 @@ import sqlalchemy as sa
 # than introducing a cross-service import.
 
 inbox_messages = sa.table(
-    'messages',
-    sa.column('id'),
-    sa.column('channel'),
-    sa.column('recipient'),
-    sa.column('body'),
-    sa.column('received_at'),
-    schema='inbox',
+    "messages",
+    sa.column("id"),
+    sa.column("channel"),
+    sa.column("recipient"),
+    sa.column("body"),
+    sa.column("received_at"),
+    schema="inbox",
 )
 
 traffic_messages = sa.table(
-    'messages',
-    sa.column('id'),
-    sa.column('channel'),
-    sa.column('recipient'),
-    sa.column('routed_at'),
-    schema='traffic',
+    "messages",
+    sa.column("id"),
+    sa.column("channel"),
+    sa.column("recipient"),
+    sa.column("routed_at"),
+    schema="traffic",
 )
 
 dispatcher_messages = sa.table(
-    'messages',
-    sa.column('id'),
-    sa.column('channel'),
-    sa.column('recipient'),
-    sa.column('send_status'),
-    sa.column('sent_at'),
-    schema='dispatcher',
+    "messages",
+    sa.column("id"),
+    sa.column("channel"),
+    sa.column("recipient"),
+    sa.column("send_status"),
+    sa.column("sent_at"),
+    schema="dispatcher",
 )

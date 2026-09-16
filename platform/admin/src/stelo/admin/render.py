@@ -9,28 +9,28 @@ import orjson
 from .adapters.metrics import ChannelCounts, Event
 
 _env = jinja2.Environment(
-    loader=jinja2.FileSystemLoader('templates/fragments'),
+    loader=jinja2.FileSystemLoader("templates/fragments"),
     autoescape=True,
     trim_blocks=True,
     lstrip_blocks=True,
 )
 
 STAGE_COLORS = {
-    'received': 'var(--received)',
-    'routed': 'var(--processed)',
-    'sent': 'var(--dispatched)',
+    "received": "var(--received)",
+    "routed": "var(--processed)",
+    "sent": "var(--dispatched)",
 }
 FEED_STAGE_LABEL = {
-    'received': 'received',
-    'routed': 'routed',
-    'sent': 'sent',
-    'failed': 'failed',
+    "received": "received",
+    "routed": "routed",
+    "sent": "sent",
+    "failed": "failed",
 }
 FEED_STAGE_COLOR = {
-    'received': 'var(--received)',
-    'routed': 'var(--processed)',
-    'sent': 'var(--dispatched)',
-    'failed': 'var(--critical)',
+    "received": "var(--received)",
+    "routed": "var(--processed)",
+    "sent": "var(--dispatched)",
+    "failed": "var(--critical)",
 }
 
 
@@ -46,18 +46,18 @@ def spark(
         return f'<svg id="{elem_id}" viewBox="0 0 {width} {height}"></svg>'
     hi = max(values) * 1.15 or 1.0
     step = width / max(len(values) - 1, 1)
-    pts = ' '.join(
-        f'{i * step:.1f},{height - (v / hi) * height:.1f}' for i, v in enumerate(values)
+    pts = " ".join(
+        f"{i * step:.1f},{height - (v / hi) * height:.1f}" for i, v in enumerate(values)
     )
     ly = height - (values[-1] / hi) * height
-    return _env.get_template('spark.html').render(
+    return _env.get_template("spark.html").render(
         elem_id=elem_id,
         width=width,
         height=height,
         points=pts,
         color=color,
         lx=width,
-        ly=f'{ly:.1f}',
+        ly=f"{ly:.1f}",
     )
 
 
@@ -77,19 +77,19 @@ def chart(history: dict[str, list[float]], width: int = 560, height: int = 220) 
         gv = hi * g / 4
         gy = y_of(gv)
         gridlines.append(
-            {'y': f'{gy:.1f}', 'label_y': f'{gy + 3:.1f}', 'label': round(gv)}
+            {"y": f"{gy:.1f}", "label_y": f"{gy + 3:.1f}", "label": round(gv)}
         )
     series = [
         {
-            'points': ' '.join(
-                f'{pad_l + i * step:.1f},{y_of(v):.1f}' for i, v in enumerate(values)
+            "points": " ".join(
+                f"{pad_l + i * step:.1f},{y_of(v):.1f}" for i, v in enumerate(values)
             ),
-            'color': STAGE_COLORS[stage],
+            "color": STAGE_COLORS[stage],
         }
         for stage, values in history.items()
     ]
 
-    return _env.get_template('chart.html').render(
+    return _env.get_template("chart.html").render(
         width=width,
         height=height,
         pad_l=pad_l,
@@ -97,7 +97,7 @@ def chart(history: dict[str, list[float]], width: int = 560, height: int = 220) 
         pad_t=pad_t,
         inner_h=inner_h,
         axis_y=pad_t + inner_h,
-        step=f'{step:.4f}',
+        step=f"{step:.4f}",
         hi=hi,
         series_json=orjson.dumps(history).decode(),
         gridlines=gridlines,
@@ -108,15 +108,15 @@ def chart(history: dict[str, list[float]], width: int = 560, height: int = 220) 
 def channel_bars(rows: list[ChannelCounts]) -> str:
     if not rows:
         return '<div id="channels"></div>'
-    max_total = max((r['sent'] + r['failed'] for r in rows), default=1) or 1
-    return _env.get_template('channel_bars.html').render(
+    max_total = max((r["sent"] + r["failed"] for r in rows), default=1) or 1
+    return _env.get_template("channel_bars.html").render(
         rows=[
             {
-                'channel': r['channel'],
-                'sent_pct': f'{r["sent"] / max_total * 100:.2f}',
-                'fail_pct': f'{r["failed"] / max_total * 100:.2f}',
-                'sent_fmt': f'{r["sent"]:,}',
-                'failed_fmt': f'{r["failed"]:,}',
+                "channel": r["channel"],
+                "sent_pct": f"{r['sent'] / max_total * 100:.2f}",
+                "fail_pct": f"{r['failed'] / max_total * 100:.2f}",
+                "sent_fmt": f"{r['sent']:,}",
+                "failed_fmt": f"{r['failed']:,}",
             }
             for r in rows
         ]
@@ -124,14 +124,14 @@ def channel_bars(rows: list[ChannelCounts]) -> str:
 
 
 def feed_rows(events: list[Event]) -> str:
-    return _env.get_template('feed_rows.html').render(
+    return _env.get_template("feed_rows.html").render(
         events=[
             {
-                'time': e['at'][11:19],
-                'color': FEED_STAGE_COLOR[e['stage']],
-                'label': FEED_STAGE_LABEL[e['stage']],
-                'id': e['id'],
-                'channel': e['channel'],
+                "time": e["at"][11:19],
+                "color": FEED_STAGE_COLOR[e["stage"]],
+                "label": FEED_STAGE_LABEL[e["stage"]],
+                "id": e["id"],
+                "channel": e["channel"],
             }
             for e in events
         ]

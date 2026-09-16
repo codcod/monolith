@@ -21,8 +21,10 @@ def _do_run_migrations(connection: sa.Connection, target_metadata: sa.MetaData) 
         context.run_migrations()
 
 
-async def _run_async_migrations(engine: AsyncEngine, target_metadata: sa.MetaData) -> None:
-    assert target_metadata.schema is not None, 'target_metadata needs a schema'
+async def _run_async_migrations(
+    engine: AsyncEngine, target_metadata: sa.MetaData
+) -> None:
+    assert target_metadata.schema is not None, "target_metadata needs a schema"
 
     async with engine.connect() as connection:
         # The schema has to exist before alembic can even check its

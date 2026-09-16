@@ -22,8 +22,8 @@ from rbfly.streams import Offset, StreamsClient, streams_client
 # stay referenced too, or it's garbage-collected, which runs its `finally`
 # and tears the publisher down server-side out from under the cached
 # (now-dead) publisher object.
-_publishers: 'weakref.WeakKeyDictionary[StreamsClient, dict[str, tuple[tp.Any, tp.Any]]]' = weakref.WeakKeyDictionary()
-_publisher_locks: 'weakref.WeakKeyDictionary[StreamsClient, asyncio.Lock]' = (
+_publishers: "weakref.WeakKeyDictionary[StreamsClient, dict[str, tuple[tp.Any, tp.Any]]]" = weakref.WeakKeyDictionary()  # noqa: E501
+_publisher_locks: "weakref.WeakKeyDictionary[StreamsClient, asyncio.Lock]" = (
     weakref.WeakKeyDictionary()
 )
 

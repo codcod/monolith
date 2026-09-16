@@ -59,7 +59,7 @@ async def test_exception_in_block_rolls_back_and_still_closes():
     uow = SqlAlchemyUnitOfWork(FakeEngine())  # type: ignore[arg-type]
     with pytest.raises(ValueError):
         async with uow:
-            raise ValueError('boom')
+            raise ValueError("boom")
 
     assert uow.transaction.rolled_back
     assert uow.connection.closed

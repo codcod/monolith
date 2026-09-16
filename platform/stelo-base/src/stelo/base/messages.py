@@ -1,7 +1,7 @@
 import typing as tp
 
-Channel = tp.Literal['sms', 'email', 'whatsapp']
-Status = tp.Literal['received', 'routed', 'sent']
+Channel = tp.Literal["sms", "email", "whatsapp"]
+Status = tp.Literal["received", "routed", "sent"]
 
 
 class Message(tp.TypedDict):

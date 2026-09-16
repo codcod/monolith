@@ -44,16 +44,16 @@ class FakeClient:
 async def test_publish_creates_stream_and_sends_json():
     client = FakeClient()
 
-    await publish(client, 'traffic-in', {'id': '1'})
+    await publish(client, "traffic-in", {"id": "1"})
 
-    assert client.created_streams == ['traffic-in']
-    assert client.sent == [orjson.dumps({'id': '1'})]
+    assert client.created_streams == ["traffic-in"]
+    assert client.sent == [orjson.dumps({"id": "1"})]
 
 
 async def test_consume_creates_stream_and_decodes_json():
-    client = FakeClient(messages=[orjson.dumps({'id': '1'}), orjson.dumps({'id': '2'})])
+    client = FakeClient(messages=[orjson.dumps({"id": "1"}), orjson.dumps({"id": "2"})])
 
-    received = [message async for message in consume(client, 'dispatch-in')]
+    received = [message async for message in consume(client, "dispatch-in")]
 
-    assert client.created_streams == ['dispatch-in']
-    assert received == [{'id': '1'}, {'id': '2'}]
+    assert client.created_streams == ["dispatch-in"]
+    assert received == [{"id": "1"}, {"id": "2"}]

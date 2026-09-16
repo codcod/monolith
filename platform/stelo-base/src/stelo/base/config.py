@@ -26,7 +26,7 @@ def read_config(fn: str) -> dict[str, Config]:
     Read configuration file and return configuration object, keyed by
     module name (each module's config.toml has one top-level table).
     """
-    with open(fn, 'rb') as f:
+    with open(fn, "rb") as f:
         return tomllib.load(f)
 
 
@@ -35,12 +35,12 @@ def setup_logging(config: Config) -> None:
     Setup logging for an application.
     """
     level = logging.getLevelNamesMapping().get(
-        config.get('log_level', 'WARNING'), logging.WARNING
+        config.get("log_level", "WARNING"), logging.WARNING
     )
     logging.basicConfig(
         level=level,
-        format='%(asctime)s [%(module)s] %(message)s',
-        datefmt='%m/%d/%Y %H:%M:%S %Z',
+        format="%(asctime)s [%(module)s] %(message)s",
+        datefmt="%m/%d/%Y %H:%M:%S %Z",
         # Without force=True this is a no-op whenever the root logger
         # already has handlers (e.g. under pytest, or any host process
         # that configured logging first).

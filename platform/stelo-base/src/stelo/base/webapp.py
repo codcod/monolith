@@ -13,9 +13,9 @@ from .db import make_engine
 from .security import auth_middleware, request_id_middleware
 from .streams import connect
 
-CONFIG_KEY = web.AppKey('config', Config)
-DB_KEY = web.AppKey('db', AsyncEngine)
-RABBIT_KEY = web.AppKey('rabbit', StreamsClient)
+CONFIG_KEY = web.AppKey("config", Config)
+DB_KEY = web.AppKey("db", AsyncEngine)
+RABBIT_KEY = web.AppKey("rabbit", StreamsClient)
 
 
 def make_app(
@@ -40,12 +40,12 @@ def make_app(
     """
     middlewares: list[Middleware] = [request_id_middleware]
     if require_auth:
-        middlewares.append(auth_middleware(config.get('auth_token', 'dev-token')))
+        middlewares.append(auth_middleware(config.get("auth_token", "dev-token")))
     app = web.Application(middlewares=middlewares)
     app[CONFIG_KEY] = config
     _ = app.add_routes(routes)
 
-    rabbitmq_url = config.get('rabbitmq_url')
+    rabbitmq_url = config.get("rabbitmq_url")
     if rabbitmq_url:
 
         async def rabbit_ctx(app: web.Application) -> AsyncIterator[None]:

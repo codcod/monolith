@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncConnection
 
 from .read_model import dispatcher_messages, inbox_messages, traffic_messages
 
-Channel = tp.Literal['sms', 'email', 'whatsapp']
+Channel = tp.Literal["sms", "email", "whatsapp"]
 
 
 class StageTotals(tp.TypedDict):
@@ -35,9 +35,9 @@ async def stage_totals(conn: AsyncConnection) -> StageTotals:
         sa.select(sa.func.count()).select_from(dispatcher_messages)
     )
     return {
-        'received': received or 0,
-        'routed': routed or 0,
-        'sent': sent or 0,
+        "received": received or 0,
+        "routed": routed or 0,
+        "sent": sent or 0,
     }
 
 
@@ -77,7 +77,7 @@ async def latency_percentiles_ms(conn: AsyncConnection) -> dict[str, float | Non
         """)
     )
     p50, p95 = tp.cast(tuple[float | None, float | None], tp.cast(object, result.one()))
-    return {'p50': p50, 'p95': p95}
+    return {"p50": p50, "p95": p95}
 
 
 async def error_rate(conn: AsyncConnection) -> float:
@@ -106,9 +106,9 @@ async def channel_breakdown(conn: AsyncConnection) -> list[ChannelCounts]:
     )
     return [
         {
-            'channel': tp.cast(str, row.channel),
-            'sent': tp.cast(int, row.sent),
-            'failed': tp.cast(int, row.failed),
+            "channel": tp.cast(str, row.channel),
+            "sent": tp.cast(int, row.sent),
+            "failed": tp.cast(int, row.failed),
         }
         for row in result
     ]
@@ -123,20 +123,22 @@ async def recent_events(conn: AsyncConnection, limit: int = 20) -> list[Event]:
             SELECT id, 'routed' AS stage, channel, routed_at AS at
             FROM traffic.messages
             UNION ALL
-            SELECT id, CASE WHEN send_status = 'sent' THEN 'sent' ELSE 'failed' END AS stage,
-                   channel, sent_at AS at
+            SELECT id, CASE
+              WHEN send_status = 'sent'
+              THEN 'sent'
+              ELSE 'failed' END AS stage, channel, sent_at AS at
             FROM dispatcher.messages
             ORDER BY at DESC
             LIMIT :limit
         """),
-        {'limit': limit},
+        {"limit": limit},
     )
     return [
         {
-            'id': str(tp.cast(object, row.id)),
-            'stage': tp.cast(str, row.stage),
-            'channel': tp.cast(str, row.channel),
-            'at': tp.cast(datetime, row.at).isoformat(),
+            "id": str(tp.cast(object, row.id)),
+            "stage": tp.cast(str, row.stage),
+            "channel": tp.cast(str, row.channel),
+            "at": tp.cast(datetime, row.at).isoformat(),
         }
         for row in result
     ]

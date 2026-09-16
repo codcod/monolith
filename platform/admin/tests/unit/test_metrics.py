@@ -44,15 +44,15 @@ class FakeConnection:
 async def test_stage_totals_counts_each_schema():
     conn = FakeConnection(scalars=[184213, 181840, 179026])
     assert await metrics.stage_totals(conn) == {
-        'received': 184213,
-        'routed': 181840,
-        'sent': 179026,
+        "received": 184213,
+        "routed": 181840,
+        "sent": 179026,
     }
 
 
 async def test_stage_totals_treats_null_count_as_zero():
     conn = FakeConnection(scalars=[None, None, None])
-    assert await metrics.stage_totals(conn) == {'received': 0, 'routed': 0, 'sent': 0}
+    assert await metrics.stage_totals(conn) == {"received": 0, "routed": 0, "sent": 0}
 
 
 async def test_oldest_unprocessed_age_seconds():
@@ -67,7 +67,7 @@ async def test_oldest_unprocessed_age_seconds_none_when_no_backlog():
 
 async def test_latency_percentiles_ms():
     conn = FakeConnection(results=[FakeResult(one=(120.0, 480.0))])
-    assert await metrics.latency_percentiles_ms(conn) == {'p50': 120.0, 'p95': 480.0}
+    assert await metrics.latency_percentiles_ms(conn) == {"p50": 120.0, "p95": 480.0}
 
 
 async def test_error_rate_defaults_to_zero_when_no_messages():
@@ -76,27 +76,27 @@ async def test_error_rate_defaults_to_zero_when_no_messages():
 
 
 async def test_channel_breakdown_maps_rows():
-    row = SimpleNamespace(channel='sms', sent=82340, failed=214)
+    row = SimpleNamespace(channel="sms", sent=82340, failed=214)
     conn = FakeConnection(results=[FakeResult(rows=[row])])
     assert await metrics.channel_breakdown(conn) == [
-        {'channel': 'sms', 'sent': 82340, 'failed': 214}
+        {"channel": "sms", "sent": 82340, "failed": 214}
     ]
 
 
 async def test_recent_events_maps_rows_and_formats_timestamp():
     row = SimpleNamespace(
-        id='abc',
-        stage='sent',
-        channel='email',
+        id="abc",
+        stage="sent",
+        channel="email",
         at=datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC),
     )
     conn = FakeConnection(results=[FakeResult(rows=[row])])
     events = await metrics.recent_events(conn, limit=5)
     assert events == [
         {
-            'id': 'abc',
-            'stage': 'sent',
-            'channel': 'email',
-            'at': '2026-01-01T12:00:00+00:00',
+            "id": "abc",
+            "stage": "sent",
+            "channel": "email",
+            "at": "2026-01-01T12:00:00+00:00",
         }
     ]

@@ -17,16 +17,16 @@ import orjson
 
 def patch_signals(signals: dict[str, tp.Any]) -> str:
     payload = orjson.dumps(signals).decode()
-    return f'event: datastar-patch-signals\ndata: signals {payload}\n\n'
+    return f"event: datastar-patch-signals\ndata: signals {payload}\n\n"
 
 
 def patch_elements(
     html: str, *, selector: str | None = None, mode: str | None = None
 ) -> str:
-    lines = ['event: datastar-patch-elements']
+    lines = ["event: datastar-patch-elements"]
     if selector:
-        lines.append(f'data: selector {selector}')
+        lines.append(f"data: selector {selector}")
     if mode:
-        lines.append(f'data: mode {mode}')
-    lines += [f'data: elements {line}' for line in html.splitlines()]
-    return '\n'.join(lines) + '\n\n'
+        lines.append(f"data: mode {mode}")
+    lines += [f"data: elements {line}" for line in html.splitlines()]
+    return "\n".join(lines) + "\n\n"

@@ -13,25 +13,25 @@ from stelo.admin.adapters import metrics
 from stelo.admin.datastar import patch_elements, patch_signals
 
 routes = web.RouteTableDef()
-STATIC_DIR = Path('static')
-STAGES = ('received', 'routed', 'sent')
+STATIC_DIR = Path("static")
+STAGES = ("received", "routed", "sent")
 HISTORY_LEN = 30
 TICK_SECONDS = 2
 
 
-@routes.get('/health')
+@routes.get("/health")
 async def health(_request: web.Request) -> web.Response:
-    return web.json_response({'status': 'ok'})
+    return web.json_response({"status": "ok"})
 
 
-@routes.get('/')
+@routes.get("/")
 async def index(request: web.Request) -> web.Response:
     return aiohttp_jinja2.render_template(
-        'index.html', request, {'body_init': "@get('/events', {retryMaxCount: 100})"}
+        "index.html", request, {"body_init": "@get('/events', {retryMaxCount: 100})"}
     )
 
 
-@routes.get('/events')
+@routes.get("/events")
 async def events(request: web.Request) -> web.StreamResponse:
     """
     Datastar SSE feed: every tick, query current pipeline state and push one
@@ -44,7 +44,7 @@ async def events(request: web.Request) -> web.StreamResponse:
     ever needs many concurrent viewers or a longer look-back.`
     """
     response = web.StreamResponse(
-        headers={'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache'}
+        headers={"Content-Type": "text/event-stream", "Cache-Control": "no-cache"}
     )
     _ = await response.prepare(request)
 
@@ -74,27 +74,27 @@ async def events(request: web.Request) -> web.StreamResponse:
             previous = totals
 
             signals = {
-                'receivedTotal': totals['received'],
-                'routedTotal': totals['routed'],
-                'sentTotal': totals['sent'],
-                'receivedRate': round(rates['received'], 1),
-                'routedRate': round(rates['routed'], 1),
-                'sentRate': round(rates['sent'], 1),
-                'backlog': max(0, totals['received'] - totals['routed']),
-                'latencyP50': round(latency['p50'])
-                if latency['p50'] is not None
+                "receivedTotal": totals["received"],
+                "routedTotal": totals["routed"],
+                "sentTotal": totals["sent"],
+                "receivedRate": round(rates["received"], 1),
+                "routedRate": round(rates["routed"], 1),
+                "sentRate": round(rates["sent"], 1),
+                "backlog": max(0, totals["received"] - totals["routed"]),
+                "latencyP50": round(latency["p50"])
+                if latency["p50"] is not None
                 else None,
-                'latencyP95': round(latency['p95'])
-                if latency['p95'] is not None
+                "latencyP95": round(latency["p95"])
+                if latency["p95"] is not None
                 else None,
-                'errorRate': round(err_rate * 100, 2),
-                'oldestUnprocessed': round(oldest) if oldest is not None else 0,
+                "errorRate": round(err_rate * 100, 2),
+                "oldestUnprocessed": round(oldest) if oldest is not None else 0,
             }
             await response.write(patch_signals(signals).encode())
 
             for stage in STAGES:
                 fragment = render.spark(
-                    history[stage], render.STAGE_COLORS[stage], f'spark-{stage}'
+                    history[stage], render.STAGE_COLORS[stage], f"spark-{stage}"
                 )
                 await response.write(patch_elements(fragment).encode())
             await response.write(patch_elements(render.chart(history)).encode())
@@ -111,7 +111,7 @@ def build_app(config: Config) -> web.Application:
     # read-only view over the other services' data, so it skips the bearer-
     # token stub entirely rather than bolting it onto routes a browser can't
     # attach a header to anyway (see stelo.base.webapp.make_app).
-    app = make_app(config, routes=routes, db_dsn=config['db'], require_auth=False)
-    _ = app.router.add_static('/static', STATIC_DIR)
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates'))
+    app = make_app(config, routes=routes, db_dsn=config["db"], require_auth=False)
+    _ = app.router.add_static("/static", STATIC_DIR)
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("templates"))
     return app
