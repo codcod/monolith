@@ -49,6 +49,7 @@ COPY --from=builder /app/.venv/lib/python3.13/site-packages /opt/site-packages
 COPY platform/admin/bin ./bin
 COPY platform/admin/config ./config
 COPY platform/admin/static ./static
+COPY platform/admin/templates ./templates
 ENV PYTHONPATH=/opt/site-packages
 
 USER nonroot
