@@ -2,6 +2,8 @@ import asyncio
 import contextlib
 from pathlib import Path
 
+import aiohttp_jinja2
+import jinja2
 from aiohttp import web
 from stelo.base.config import Config
 from stelo.base.webapp import DB_KEY, make_app
@@ -23,8 +25,10 @@ async def health(_request: web.Request) -> web.Response:
 
 
 @routes.get('/')
-async def index(_request: web.Request) -> web.FileResponse:
-    return web.FileResponse(STATIC_DIR / 'index.html')
+async def index(request: web.Request) -> web.Response:
+    return aiohttp_jinja2.render_template(
+        'index.html', request, {'body_init': "@get('/events', {retryMaxCount: 100})"}
+    )
 
 
 @routes.get('/events')
@@ -109,4 +113,5 @@ def build_app(config: Config) -> web.Application:
     # attach a header to anyway (see stelo.base.webapp.make_app).
     app = make_app(config, routes=routes, db_dsn=config['db'], require_auth=False)
     _ = app.router.add_static('/static', STATIC_DIR)
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates'))
     return app

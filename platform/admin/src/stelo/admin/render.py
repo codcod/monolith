@@ -1,14 +1,19 @@
 """
-Tiny f-string HTML/SVG builders for the fragments pushed over SSE — no
-templating engine anywhere in this codebase, so this follows suit rather
-than introducing jinja2 for four small snippets.
+Fragment builders for the markup pushed over SSE. Math (coordinates, colors,
+percentages) stays in Python — Jinja templates just lay out the markup.
 """
 
-import html
-
+import jinja2
 import orjson
 
 from .adapters.metrics import ChannelCounts, Event
+
+_env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader('templates/fragments'),
+    autoescape=True,
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
 STAGE_COLORS = {
     'received': 'var(--received)',
@@ -44,13 +49,15 @@ def spark(
     pts = ' '.join(
         f'{i * step:.1f},{height - (v / hi) * height:.1f}' for i, v in enumerate(values)
     )
-    lx, ly = width, height - (values[-1] / hi) * height
-    return (
-        f'<svg id="{elem_id}" viewBox="0 0 {width} {height}" preserveAspectRatio="none">'
-        f'<polyline points="{pts}" fill="none" stroke="{color}" stroke-width="2" '
-        f'stroke-linecap="round" stroke-linejoin="round"/>'
-        f'<circle cx="{lx}" cy="{ly:.1f}" r="3" fill="{color}"/>'
-        f'</svg>'
+    ly = height - (values[-1] / hi) * height
+    return _env.get_template('spark.html').render(
+        elem_id=elem_id,
+        width=width,
+        height=height,
+        points=pts,
+        color=color,
+        lx=width,
+        ly=f'{ly:.1f}',
     )
 
 
@@ -65,37 +72,36 @@ def chart(history: dict[str, list[float]], width: int = 560, height: int = 220) 
     def y_of(v: float) -> float:
         return pad_t + inner_h - (v / hi) * inner_h
 
-    parts: list[str] = []
+    gridlines = []
     for g in range(5):
         gv = hi * g / 4
         gy = y_of(gv)
-        parts.append(
-            f'<line x1="{pad_l}" x2="{width - pad_r}" y1="{gy:.1f}" y2="{gy:.1f}" '
-            + 'stroke="var(--grid)" stroke-width="1"/>'
+        gridlines.append(
+            {'y': f'{gy:.1f}', 'label_y': f'{gy + 3:.1f}', 'label': round(gv)}
         )
-        parts.append(
-            f'<text x="4" y="{gy + 3:.1f}" font-size="9" fill="var(--text-muted)" '
-            + f'font-family="IBM Plex Mono, monospace">{round(gv)}</text>'
-        )
-    parts.append(
-        f'<line x1="{pad_l}" x2="{width - pad_r}" y1="{pad_t + inner_h}" '
-        + f'y2="{pad_t + inner_h}" stroke="var(--axis)" stroke-width="1"/>'
-    )
-    for stage, values in history.items():
-        pts = ' '.join(
-            f'{pad_l + i * step:.1f},{y_of(v):.1f}' for i, v in enumerate(values)
-        )
-        parts.append(
-            f'<polyline points="{pts}" fill="none" stroke="{STAGE_COLORS[stage]}" '
-            + 'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
-        )
+    series = [
+        {
+            'points': ' '.join(
+                f'{pad_l + i * step:.1f},{y_of(v):.1f}' for i, v in enumerate(values)
+            ),
+            'color': STAGE_COLORS[stage],
+        }
+        for stage, values in history.items()
+    ]
 
-    series_json = html.escape(orjson.dumps(history).decode(), quote=True)
-    return (
-        f'<svg id="chart" viewBox="0 0 {width} {height}" preserveAspectRatio="none" '
-        f'data-series="{series_json}" data-step="{step:.4f}" data-pad-l="{pad_l}" '
-        f'data-pad-t="{pad_t}" data-inner-h="{inner_h}" data-hi="{hi}">'
-        f'{"".join(parts)}</svg>'
+    return _env.get_template('chart.html').render(
+        width=width,
+        height=height,
+        pad_l=pad_l,
+        pad_r=pad_r,
+        pad_t=pad_t,
+        inner_h=inner_h,
+        axis_y=pad_t + inner_h,
+        step=f'{step:.4f}',
+        hi=hi,
+        series_json=orjson.dumps(history).decode(),
+        gridlines=gridlines,
+        series=series,
     )
 
 
@@ -103,36 +109,30 @@ def channel_bars(rows: list[ChannelCounts]) -> str:
     if not rows:
         return '<div id="channels"></div>'
     max_total = max((r['sent'] + r['failed'] for r in rows), default=1) or 1
-    body: list[str] = []
-    for r in rows:
-        sent_pct = r['sent'] / max_total * 100
-        fail_pct = r['failed'] / max_total * 100
-        body.append(
-            '<div class="chan-row">'
-            + f'<div class="chan-name">{html.escape(r["channel"])}</div>'
-            + '<div class="chan-bar-track">'
-            + f'<div class="chan-bar-seg" style="width:{sent_pct:.2f}%;background:var(--good)"></div>'
-            + f'<div class="chan-bar-seg" style="width:{fail_pct:.2f}%;background:var(--critical)"></div>'
-            + '</div>'
-            + f'<div class="chan-count"><b>{r["sent"]:,}</b> '
-            + f'<span class="fail-text">/ {r["failed"]:,}</span></div>'
-            + '</div>'
-        )
-    return f'<div id="channels">{"".join(body)}</div>'
+    return _env.get_template('channel_bars.html').render(
+        rows=[
+            {
+                'channel': r['channel'],
+                'sent_pct': f'{r["sent"] / max_total * 100:.2f}',
+                'fail_pct': f'{r["failed"] / max_total * 100:.2f}',
+                'sent_fmt': f'{r["sent"]:,}',
+                'failed_fmt': f'{r["failed"]:,}',
+            }
+            for r in rows
+        ]
+    )
 
 
 def feed_rows(events: list[Event]) -> str:
-    rows: list[str] = []
-    for e in events:
-        color = FEED_STAGE_COLOR[e['stage']]
-        label = FEED_STAGE_LABEL[e['stage']]
-        rows.append(
-            '<div class="feed-row">'
-            + f'<div class="feed-time">{html.escape(e["at"][11:19])}</div>'
-            + f'<div class="badge" style="background:color-mix(in srgb, {color} 16%, transparent); '
-            + f'color:{color}"><span class="bdot" style="background:{color}"></span>{label}</div>'
-            + f'<div class="feed-id">{html.escape(e["id"])}</div>'
-            + f'<div class="feed-chan">{html.escape(e["channel"])}</div>'
-            + '</div>'
-        )
-    return f'<div id="feed">{"".join(rows)}</div>'
+    return _env.get_template('feed_rows.html').render(
+        events=[
+            {
+                'time': e['at'][11:19],
+                'color': FEED_STAGE_COLOR[e['stage']],
+                'label': FEED_STAGE_LABEL[e['stage']],
+                'id': e['id'],
+                'channel': e['channel'],
+            }
+            for e in events
+        ]
+    )

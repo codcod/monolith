@@ -18,7 +18,7 @@ def test_chart_embeds_series_as_json_for_the_hover_script():
     )
     assert svg.startswith('<svg id="chart"')
     assert 'data-series="' in svg
-    assert '&quot;received&quot;:[1.0,2.0]' in svg
+    assert '&#34;received&#34;:[1.0,2.0]' in svg
 
 
 def test_channel_bars_renders_sent_and_failed_counts():

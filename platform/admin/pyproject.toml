@@ -9,6 +9,7 @@ description = "Read-only ops dashboard over the inbox/traffic/dispatcher pipelin
 requires-python = ">=3.13,<3.14"
 dependencies = [
     "stelo-base",
+    "aiohttp-jinja2",
 ]
 
 [tool.uv.sources]
