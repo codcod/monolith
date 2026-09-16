@@ -1,4 +1,5 @@
 import pytest
+
 from stelo.base.repository import AbstractRepository
 
 

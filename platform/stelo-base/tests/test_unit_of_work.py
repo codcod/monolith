@@ -1,4 +1,5 @@
 import pytest
+
 from stelo.base.unit_of_work import AbstractUnitOfWork, SqlAlchemyUnitOfWork
 
 

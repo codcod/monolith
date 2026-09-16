@@ -3,11 +3,12 @@ import contextlib
 from pathlib import Path
 
 from aiohttp import web
+from stelo.base.config import Config
+from stelo.base.webapp import DB_KEY, make_app
+
 from stelo.admin import render
 from stelo.admin.adapters import metrics
 from stelo.admin.datastar import patch_elements, patch_signals
-from stelo.base.config import Config
-from stelo.base.webapp import DB_KEY, make_app
 
 routes = web.RouteTableDef()
 STATIC_DIR = Path('static')
@@ -17,12 +18,12 @@ TICK_SECONDS = 2
 
 
 @routes.get('/health')
-async def health(request: web.Request) -> web.Response:
+async def health(_request: web.Request) -> web.Response:
     return web.json_response({'status': 'ok'})
 
 
 @routes.get('/')
-async def index(request: web.Request) -> web.FileResponse:
+async def index(_request: web.Request) -> web.FileResponse:
     return web.FileResponse(STATIC_DIR / 'index.html')
 
 
@@ -41,7 +42,7 @@ async def events(request: web.Request) -> web.StreamResponse:
     response = web.StreamResponse(
         headers={'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache'}
     )
-    await response.prepare(request)
+    _ = await response.prepare(request)
 
     history: dict[str, list[float]] = {stage: [] for stage in STAGES}
     previous: metrics.StageTotals | None = None
@@ -107,5 +108,5 @@ def build_app(config: Config) -> web.Application:
     # token stub entirely rather than bolting it onto routes a browser can't
     # attach a header to anyway (see stelo.base.webapp.make_app).
     app = make_app(config, routes=routes, db_dsn=config['db'], require_auth=False)
-    app.router.add_static('/static', STATIC_DIR)
+    _ = app.router.add_static('/static', STATIC_DIR)
     return app

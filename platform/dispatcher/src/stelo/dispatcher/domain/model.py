@@ -2,7 +2,7 @@ import dataclasses
 import typing as tp
 from datetime import datetime
 
-Channel = tp.Literal['sms', 'email', 'whatsapp']
+Channel = tp.Literal["sms", "email", "whatsapp"]
 
 
 @dataclasses.dataclass

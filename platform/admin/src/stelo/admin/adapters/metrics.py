@@ -1,4 +1,5 @@
 import typing as tp
+from datetime import datetime
 
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncConnection
@@ -53,7 +54,7 @@ async def oldest_unprocessed_age_seconds(conn: AsyncConnection) -> float | None:
             WHERE t.id IS NULL
         """)
     )
-    return result.scalar()
+    return tp.cast(float | None, result.scalar())
 
 
 async def latency_percentiles_ms(conn: AsyncConnection) -> dict[str, float | None]:
@@ -75,7 +76,7 @@ async def latency_percentiles_ms(conn: AsyncConnection) -> dict[str, float | Non
             ) recent
         """)
     )
-    p50, p95 = result.one()
+    p50, p95 = tp.cast(tuple[float | None, float | None], tp.cast(object, result.one()))
     return {'p50': p50, 'p95': p95}
 
 
@@ -104,7 +105,11 @@ async def channel_breakdown(conn: AsyncConnection) -> list[ChannelCounts]:
         """)
     )
     return [
-        {'channel': row.channel, 'sent': row.sent, 'failed': row.failed}
+        {
+            'channel': tp.cast(str, row.channel),
+            'sent': tp.cast(int, row.sent),
+            'failed': tp.cast(int, row.failed),
+        }
         for row in result
     ]
 
@@ -128,10 +133,10 @@ async def recent_events(conn: AsyncConnection, limit: int = 20) -> list[Event]:
     )
     return [
         {
-            'id': str(row.id),
-            'stage': row.stage,
-            'channel': row.channel,
-            'at': row.at.isoformat(),
+            'id': str(tp.cast(object, row.id)),
+            'stage': tp.cast(str, row.stage),
+            'channel': tp.cast(str, row.channel),
+            'at': tp.cast(datetime, row.at).isoformat(),
         }
         for row in result
     ]

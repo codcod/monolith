@@ -5,12 +5,26 @@ import typing as tp
 
 import uvloop
 
-type Config = dict[tp.Any, tp.Any]
 
-
-def read_config(fn: str) -> Config:
+class Config(tp.TypedDict):
     """
-    Read configuration file and return configuration object.
+    A module's own section of its `config.toml` (e.g. `config["traffic"]`
+    after `read_config`) — the shape `make_app`/`build_app` expect. `db` is
+    the one key every module's config carries; the rest are per-module
+    (e.g. admin has no `rabbitmq_url`/`auth_token`).
+    """
+
+    db: str
+    rabbitmq_url: tp.NotRequired[str]
+    auth_token: tp.NotRequired[str]
+    log_level: tp.NotRequired[str]
+    workers: tp.NotRequired[int]
+
+
+def read_config(fn: str) -> dict[str, Config]:
+    """
+    Read configuration file and return configuration object, keyed by
+    module name (each module's config.toml has one top-level table).
     """
     with open(fn, 'rb') as f:
         return tomllib.load(f)
@@ -45,4 +59,4 @@ def setup_app(config: Config) -> None:
     2. Install uvloop based asyncio loop.
     """
     setup_logging(config)
-    uvloop.install()
+    uvloop.install()  # pyright: ignore[reportAny] -- deprecated dynamic shim, untyped in uvloop's own stubs

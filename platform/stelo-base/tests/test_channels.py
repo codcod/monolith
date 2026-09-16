@@ -1,6 +1,7 @@
 import logging
 
 import pytest
+
 from stelo.base import channels
 
 

@@ -65,21 +65,21 @@ def chart(history: dict[str, list[float]], width: int = 560, height: int = 220) 
     def y_of(v: float) -> float:
         return pad_t + inner_h - (v / hi) * inner_h
 
-    parts = []
+    parts: list[str] = []
     for g in range(5):
         gv = hi * g / 4
         gy = y_of(gv)
         parts.append(
             f'<line x1="{pad_l}" x2="{width - pad_r}" y1="{gy:.1f}" y2="{gy:.1f}" '
-            f'stroke="var(--grid)" stroke-width="1"/>'
+            + 'stroke="var(--grid)" stroke-width="1"/>'
         )
         parts.append(
             f'<text x="4" y="{gy + 3:.1f}" font-size="9" fill="var(--text-muted)" '
-            f'font-family="IBM Plex Mono, monospace">{round(gv)}</text>'
+            + f'font-family="IBM Plex Mono, monospace">{round(gv)}</text>'
         )
     parts.append(
         f'<line x1="{pad_l}" x2="{width - pad_r}" y1="{pad_t + inner_h}" '
-        f'y2="{pad_t + inner_h}" stroke="var(--axis)" stroke-width="1"/>'
+        + f'y2="{pad_t + inner_h}" stroke="var(--axis)" stroke-width="1"/>'
     )
     for stage, values in history.items():
         pts = ' '.join(
@@ -87,7 +87,7 @@ def chart(history: dict[str, list[float]], width: int = 560, height: int = 220) 
         )
         parts.append(
             f'<polyline points="{pts}" fill="none" stroke="{STAGE_COLORS[stage]}" '
-            f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+            + 'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
         )
 
     series_json = html.escape(orjson.dumps(history).decode(), quote=True)
@@ -103,36 +103,36 @@ def channel_bars(rows: list[ChannelCounts]) -> str:
     if not rows:
         return '<div id="channels"></div>'
     max_total = max((r['sent'] + r['failed'] for r in rows), default=1) or 1
-    body = []
+    body: list[str] = []
     for r in rows:
         sent_pct = r['sent'] / max_total * 100
         fail_pct = r['failed'] / max_total * 100
         body.append(
             '<div class="chan-row">'
-            f'<div class="chan-name">{html.escape(r["channel"])}</div>'
-            '<div class="chan-bar-track">'
-            f'<div class="chan-bar-seg" style="width:{sent_pct:.2f}%;background:var(--good)"></div>'
-            f'<div class="chan-bar-seg" style="width:{fail_pct:.2f}%;background:var(--critical)"></div>'
-            '</div>'
-            f'<div class="chan-count"><b>{r["sent"]:,}</b> '
-            f'<span class="fail-text">/ {r["failed"]:,}</span></div>'
-            '</div>'
+            + f'<div class="chan-name">{html.escape(r["channel"])}</div>'
+            + '<div class="chan-bar-track">'
+            + f'<div class="chan-bar-seg" style="width:{sent_pct:.2f}%;background:var(--good)"></div>'
+            + f'<div class="chan-bar-seg" style="width:{fail_pct:.2f}%;background:var(--critical)"></div>'
+            + '</div>'
+            + f'<div class="chan-count"><b>{r["sent"]:,}</b> '
+            + f'<span class="fail-text">/ {r["failed"]:,}</span></div>'
+            + '</div>'
         )
     return f'<div id="channels">{"".join(body)}</div>'
 
 
 def feed_rows(events: list[Event]) -> str:
-    rows = []
+    rows: list[str] = []
     for e in events:
         color = FEED_STAGE_COLOR[e['stage']]
         label = FEED_STAGE_LABEL[e['stage']]
         rows.append(
             '<div class="feed-row">'
-            f'<div class="feed-time">{html.escape(e["at"][11:19])}</div>'
-            f'<div class="badge" style="background:color-mix(in srgb, {color} 16%, transparent); '
-            f'color:{color}"><span class="bdot" style="background:{color}"></span>{label}</div>'
-            f'<div class="feed-id">{html.escape(e["id"])}</div>'
-            f'<div class="feed-chan">{html.escape(e["channel"])}</div>'
-            '</div>'
+            + f'<div class="feed-time">{html.escape(e["at"][11:19])}</div>'
+            + f'<div class="badge" style="background:color-mix(in srgb, {color} 16%, transparent); '
+            + f'color:{color}"><span class="bdot" style="background:{color}"></span>{label}</div>'
+            + f'<div class="feed-id">{html.escape(e["id"])}</div>'
+            + f'<div class="feed-chan">{html.escape(e["channel"])}</div>'
+            + '</div>'
         )
     return f'<div id="feed">{"".join(rows)}</div>'

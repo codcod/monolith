@@ -2,6 +2,7 @@ import logging
 import uuid
 
 from aiohttp import web
+from aiohttp.typedefs import Handler, Middleware
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +10,9 @@ REQUEST_ID_KEY = web.RequestKey('request_id', str)
 
 
 @web.middleware
-async def request_id_middleware(request: web.Request, handler):
+async def request_id_middleware(
+    request: web.Request, handler: Handler
+) -> web.StreamResponse:
     """
     Stamp every request with an id (reusing an inbound one if present) so
     it can be correlated across modules in logs.
@@ -21,7 +24,7 @@ async def request_id_middleware(request: web.Request, handler):
     return response
 
 
-def auth_middleware(token: str):
+def auth_middleware(token: str) -> Middleware:
     """
     Build a bearer-token check middleware. `token` comes from module
     config. This is a stub seam, not a real auth system: no issuing,
@@ -29,7 +32,7 @@ def auth_middleware(token: str):
     """
 
     @web.middleware
-    async def _auth(request: web.Request, handler):
+    async def _auth(request: web.Request, handler: Handler) -> web.StreamResponse:
         if request.path == '/health':
             return await handler(request)
         if request.headers.get('Authorization') != f'Bearer {token}':

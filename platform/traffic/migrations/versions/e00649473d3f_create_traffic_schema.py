@@ -21,7 +21,7 @@ depends_on: str | Sequence[str] | None = None
 def upgrade() -> None:
     """Upgrade schema."""
     op.execute('CREATE SCHEMA IF NOT EXISTS traffic')
-    op.create_table(
+    _ = op.create_table(
         'messages',
         sa.Column('id', sa.UUID(), nullable=False),
         sa.Column('channel', sa.Text(), nullable=False),

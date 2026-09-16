@@ -1,6 +1,7 @@
 from typing import Self
 
 import orjson
+
 from stelo.base.streams import consume, publish
 
 

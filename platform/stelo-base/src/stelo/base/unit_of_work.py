@@ -1,7 +1,8 @@
 import abc
+import typing as tp
 from typing import Self
 
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncTransaction
 
 
 class AbstractUnitOfWork(abc.ABC):
@@ -36,24 +37,30 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     engine: AsyncEngine
     connection: AsyncConnection
+    transaction: AsyncTransaction
+    _committed: bool
 
     def __init__(self, engine: AsyncEngine) -> None:
         self.engine = engine
 
+    @tp.override
     async def __aenter__(self) -> Self:
         self.connection = await self.engine.connect()
         self.transaction = await self.connection.begin()
         self._committed = False
         return await super().__aenter__()
 
+    @tp.override
     async def __aexit__(self, *exc: object) -> None:
         await super().__aexit__(*exc)
         await self.connection.close()
 
+    @tp.override
     async def commit(self) -> None:
         await self.transaction.commit()
         self._committed = True
 
+    @tp.override
     async def rollback(self) -> None:
         # A transaction already committed can't be rolled back too — only
         # roll back if `commit()` was never reached (exception or a caller

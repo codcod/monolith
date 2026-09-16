@@ -19,16 +19,17 @@ import pytest
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncEngine
 from stelo.base.db import make_engine
+
 from stelo.inbox.domain.model import Message
 from stelo.inbox.service_layer.unit_of_work import InboxUnitOfWork
 
 pytestmark = pytest.mark.skipif(
-    not os.environ.get('RUN_INTEGRATION_TESTS'),
-    reason='needs a live Postgres — set RUN_INTEGRATION_TESTS=1 (see `just up`)',
+    not os.environ.get("RUN_INTEGRATION_TESTS"),
+    reason="needs a live Postgres — set RUN_INTEGRATION_TESTS=1 (see `just up`)",
 )
 
 TEST_DSN = os.environ.get(
-    'INBOX_TEST_DB', 'postgresql+asyncpg://stelo:stelo@localhost/stelo'
+    "INBOX_TEST_DB", "postgresql+asyncpg://stelo:stelo@localhost/stelo"
 )
 
 
@@ -36,7 +37,7 @@ TEST_DSN = os.environ.get(
 async def engine() -> AsyncEngine:
     engine = make_engine(TEST_DSN)
     async with engine.begin() as conn:
-        await conn.execute(sa.text('CREATE SCHEMA IF NOT EXISTS inbox'))
+        await conn.execute(sa.text("CREATE SCHEMA IF NOT EXISTS inbox"))
         await conn.execute(
             sa.text(
                 """
@@ -52,16 +53,16 @@ async def engine() -> AsyncEngine:
         )
     yield engine
     async with engine.begin() as conn:
-        await conn.execute(sa.text('DELETE FROM inbox.messages'))
+        await conn.execute(sa.text("DELETE FROM inbox.messages"))
     await engine.dispose()
 
 
 def _a_message() -> Message:
     return Message(
         id=str(uuid.uuid4()),
-        channel='sms',
-        recipient='+1',
-        body='hi',
+        channel="sms",
+        recipient="+1",
+        body="hi",
         received_at=datetime.now(UTC),
     )
 
@@ -85,7 +86,7 @@ async def test_exception_before_commit_leaves_no_row(engine: AsyncEngine):
     with pytest.raises(ValueError):
         async with InboxUnitOfWork(engine) as uow:
             await uow.messages.add(message)
-            raise ValueError('boom')
+            raise ValueError("boom")
 
     async with InboxUnitOfWork(engine) as uow:
         fetched = await uow.messages.get(message.id)

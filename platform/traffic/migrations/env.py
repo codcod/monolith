@@ -14,15 +14,15 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = sa.MetaData(schema='traffic')
+target_metadata = sa.MetaData(schema="traffic")
 
-sa.Table(
-    'messages',
+_ = sa.Table(
+    "messages",
     target_metadata,
-    sa.Column('id', UUID(), primary_key=True),
-    sa.Column('channel', sa.Text(), nullable=False),
-    sa.Column('recipient', sa.Text(), nullable=False),
-    sa.Column('routed_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column("id", UUID(), primary_key=True),
+    sa.Column("channel", sa.Text(), nullable=False),
+    sa.Column("recipient", sa.Text(), nullable=False),
+    sa.Column("routed_at", sa.DateTime(timezone=True), nullable=False),
 )
 
 
@@ -34,8 +34,8 @@ def get_dsn() -> str:
     a test config.
     """
     args = context.get_x_argument(as_dictionary=True)
-    config_path = args.get('config', './config/config.toml')
-    return read_config(config_path)['traffic']['db']
+    config_path = args.get("config", "./config/config.toml")
+    return read_config(config_path)["traffic"]["db"]
 
 
 if context.is_offline_mode():
@@ -43,10 +43,10 @@ if context.is_offline_mode():
         url=get_dsn(),
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={'paramstyle': 'named'},
+        dialect_opts={"paramstyle": "named"},
         version_table_schema=target_metadata.schema,
     )
     with context.begin_transaction():
         context.run_migrations()
 else:
-    run_migrations_online(context, target_metadata, get_dsn())
+    run_migrations_online(target_metadata, get_dsn())

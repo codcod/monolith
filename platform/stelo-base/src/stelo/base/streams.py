@@ -1,6 +1,7 @@
 import asyncio
 import typing as tp
 import weakref
+from collections.abc import AsyncIterator, Mapping
 
 import orjson
 from rbfly.streams import Offset, StreamsClient, streams_client
@@ -37,7 +38,7 @@ def connect(broker_url: str) -> StreamsClient:
 
 
 async def publish(
-    client: StreamsClient, stream: str, message: tp.Mapping[str, tp.Any]
+    client: StreamsClient, stream: str, message: Mapping[str, tp.Any]
 ) -> None:
     """
     Publish a message (as JSON) to `stream`, creating it and its publisher
@@ -48,22 +49,24 @@ async def publish(
         streams = _publishers.setdefault(client, {})
         entry = streams.get(stream)
         if entry is None:
-            await client.create_stream(stream)
+            _ = await client.create_stream(stream)
             cm = client.publisher(stream)
             publisher = await cm.__aenter__()
             entry = (cm, publisher)
             streams[stream] = entry
 
         _, publisher = entry
-        await publisher.send(orjson.dumps(message))
+        _ = await publisher.send(orjson.dumps(message))
 
 
-async def consume(client: StreamsClient, stream: str) -> tp.AsyncIterator[dict]:
+async def consume(
+    client: StreamsClient, stream: str
+) -> AsyncIterator[dict[str, tp.Any]]:
     """
     Consume JSON messages from `stream` from the point of subscription
     onward, creating the stream first if needed.
     """
-    await client.create_stream(stream)
+    _ = await client.create_stream(stream)
     async for body in client.subscribe(stream, offset=Offset.NEXT):
         # We only ever publish bytes (see publish() above), so the body we
         # get back is always bytes too, not the full AMQPBody union.

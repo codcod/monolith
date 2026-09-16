@@ -1,14 +1,15 @@
 from stelo.base.unit_of_work import AbstractUnitOfWork
+
 from stelo.traffic.domain.model import Message
 from stelo.traffic.service_layer import services
 
 INCOMING = {
-    'id': '1',
-    'channel': 'sms',
-    'recipient': '+1',
-    'body': 'hi',
-    'status': 'received',
-    'created_at': '2026-01-01T00:00:00Z',
+    "id": "1",
+    "channel": "sms",
+    "recipient": "+1",
+    "body": "hi",
+    "status": "received",
+    "created_at": "2026-01-01T00:00:00Z",
 }
 
 
@@ -43,9 +44,9 @@ async def test_route_message_adds_a_routing_row_and_commits():
     assert uow.committed
     assert len(uow.messages.added) == 1
     routed = uow.messages.added[0]
-    assert routed.id == '1'
-    assert routed.channel == 'sms'
-    assert routed.recipient == '+1'
+    assert routed.id == "1"
+    assert routed.channel == "sms"
+    assert routed.recipient == "+1"
 
 
 async def test_route_message_republishes_with_status_routed():
@@ -56,7 +57,7 @@ async def test_route_message_republishes_with_status_routed():
 
     await services.route_message(INCOMING, FakeUnitOfWork(), publish)
 
-    assert published == [{**INCOMING, 'status': 'routed'}]
+    assert published == [{**INCOMING, "status": "routed"}]
 
 
 async def _noop_publish(message) -> None:

@@ -1,14 +1,15 @@
 from stelo.base.unit_of_work import AbstractUnitOfWork
+
 from stelo.dispatcher.domain.model import Message
 from stelo.dispatcher.service_layer import services
 
 INCOMING = {
-    'id': '1',
-    'channel': 'sms',
-    'recipient': '+1',
-    'body': 'hi',
-    'status': 'routed',
-    'created_at': '2026-01-01T00:00:00Z',
+    "id": "1",
+    "channel": "sms",
+    "recipient": "+1",
+    "body": "hi",
+    "status": "routed",
+    "created_at": "2026-01-01T00:00:00Z",
 }
 
 
@@ -48,7 +49,7 @@ async def test_dispatch_message_sends_via_the_given_sender():
 
     await services.dispatch_message(INCOMING, FakeUnitOfWork(), sender)
 
-    assert sender.sent == [('+1', 'hi')]
+    assert sender.sent == [("+1", "hi")]
 
 
 async def test_dispatch_message_records_the_outcome_and_commits():
@@ -59,5 +60,5 @@ async def test_dispatch_message_records_the_outcome_and_commits():
     assert uow.committed
     assert len(uow.messages.added) == 1
     recorded = uow.messages.added[0]
-    assert recorded.id == '1'
-    assert recorded.send_status == 'sent'
+    assert recorded.id == "1"
+    assert recorded.send_status == "sent"

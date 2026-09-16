@@ -1,11 +1,13 @@
 import typing as tp
+from collections.abc import Awaitable
 from datetime import UTC, datetime
 
 from stelo.base.messages import Message as WireMessage
+
 from stelo.traffic.domain.model import Message
 from stelo.traffic.service_layer.unit_of_work import TrafficUnitOfWork
 
-PublishFn = tp.Callable[[WireMessage], tp.Awaitable[None]]
+PublishFn = tp.Callable[[WireMessage], Awaitable[None]]
 
 
 async def route_message(
@@ -19,9 +21,9 @@ async def route_message(
     request specified).
     """
     message = Message(
-        id=incoming['id'],
-        channel=incoming['channel'],
-        recipient=incoming['recipient'],
+        id=incoming["id"],
+        channel=incoming["channel"],
+        recipient=incoming["recipient"],
         routed_at=datetime.now(UTC),
     )
 
@@ -29,5 +31,5 @@ async def route_message(
         await uow.messages.add(message)
         await uow.commit()
 
-    outgoing: WireMessage = {**incoming, 'status': 'routed'}
+    outgoing: WireMessage = {**incoming, "status": "routed"}
     await publish(outgoing)

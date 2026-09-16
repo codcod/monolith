@@ -36,6 +36,11 @@ target-version = "py313"
 [tool.ruff.format]
 quote-style = "single"
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+exclude = ["**/tests"]
+
 [tool.ty.environment]
 root = [
     "platform/stelo-base/src",

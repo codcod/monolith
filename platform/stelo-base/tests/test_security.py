@@ -1,5 +1,6 @@
 from aiohttp import web
 from aiohttp.test_utils import TestClient, TestServer
+
 from stelo.base.security import REQUEST_ID_KEY, auth_middleware, request_id_middleware
 
 

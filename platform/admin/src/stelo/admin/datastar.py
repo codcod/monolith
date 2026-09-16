@@ -10,10 +10,12 @@ plus optional `selector`/`mode`), and the default `mode` ("outer", no
 present on the fragment's own root tag.
 """
 
+import typing as tp
+
 import orjson
 
 
-def patch_signals(signals: dict) -> str:
+def patch_signals(signals: dict[str, tp.Any]) -> str:
     payload = orjson.dumps(signals).decode()
     return f'event: datastar-patch-signals\ndata: signals {payload}\n\n'
 

@@ -1,8 +1,10 @@
 import asyncio
 import contextlib
 import typing as tp
+from collections.abc import AsyncIterator, Coroutine, Iterable
 
 from aiohttp import web
+from aiohttp.typedefs import Middleware
 from rbfly.streams import StreamsClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
@@ -11,7 +13,7 @@ from .db import make_engine
 from .security import auth_middleware, request_id_middleware
 from .streams import connect
 
-CONFIG_KEY = web.AppKey('config', dict)
+CONFIG_KEY = web.AppKey('config', Config)
 DB_KEY = web.AppKey('db', AsyncEngine)
 RABBIT_KEY = web.AppKey('rabbit', StreamsClient)
 
@@ -19,7 +21,7 @@ RABBIT_KEY = web.AppKey('rabbit', StreamsClient)
 def make_app(
     config: Config,
     *,
-    routes: tp.Iterable[web.AbstractRouteDef] = (),
+    routes: Iterable[web.AbstractRouteDef] = (),
     db_dsn: str | None = None,
     require_auth: bool = True,
 ) -> web.Application:
@@ -36,17 +38,18 @@ def make_app(
     module that's public by design just breaks silently instead of
     protecting anything.
     """
-    middlewares = [request_id_middleware]
+    middlewares: list[Middleware] = [request_id_middleware]
     if require_auth:
         middlewares.append(auth_middleware(config.get('auth_token', 'dev-token')))
     app = web.Application(middlewares=middlewares)
     app[CONFIG_KEY] = config
-    app.add_routes(routes)
+    _ = app.add_routes(routes)
 
-    if config.get('rabbitmq_url'):
+    rabbitmq_url = config.get('rabbitmq_url')
+    if rabbitmq_url:
 
-        async def rabbit_ctx(app: web.Application):
-            client = connect(config['rabbitmq_url'])
+        async def rabbit_ctx(app: web.Application) -> AsyncIterator[None]:
+            client = connect(rabbitmq_url)
             app[RABBIT_KEY] = client
             yield
             await client.disconnect()
@@ -57,7 +60,7 @@ def make_app(
         engine = make_engine(db_dsn)
         app[DB_KEY] = engine
 
-        async def db_ctx(app: web.Application):
+        async def db_ctx(_app: web.Application) -> AsyncIterator[None]:
             yield
             await engine.dispose()
 
@@ -68,7 +71,7 @@ def make_app(
 
 def run_in_background(
     app: web.Application,
-    factory: tp.Callable[[web.Application], tp.Coroutine[tp.Any, tp.Any, None]],
+    factory: tp.Callable[[web.Application], Coroutine[tp.Any, tp.Any, None]],
 ) -> None:
     """
     Run `factory(app)` as a background task for the app's lifetime —
@@ -77,10 +80,10 @@ def run_in_background(
     alongside the (health-only) HTTP surface.
     """
 
-    async def _ctx(app: web.Application):
+    async def _ctx(app: web.Application) -> AsyncIterator[None]:
         task = asyncio.create_task(factory(app))
         yield
-        task.cancel()
+        _ = task.cancel()
         with contextlib.suppress(asyncio.CancelledError):
             await task
 
