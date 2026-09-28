@@ -14,7 +14,7 @@ from monobase.db import make_engine
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from stelo.traffic.domain.model import Message
-from stelo.traffic.service_layer.unit_of_work import TrafficUnitOfWork
+from stelo.traffic.service_layer.uow import TrafficUnitOfWork
 
 pytestmark = pytest.mark.skipif(
     not os.environ.get("RUN_INTEGRATION_TESTS"),

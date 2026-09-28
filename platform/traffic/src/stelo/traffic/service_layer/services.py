@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from stelo.base.messages import Message as WireMessage
 
 from stelo.traffic.domain.model import Message
-from stelo.traffic.service_layer.unit_of_work import TrafficUnitOfWork
+from stelo.traffic.service_layer.uow import TrafficUnitOfWork
 
 logger = logging.getLogger(__name__)
 

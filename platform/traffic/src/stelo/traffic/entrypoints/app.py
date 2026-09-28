@@ -14,7 +14,7 @@ from stelo.base.webapp import (
 
 from stelo.traffic.adapters.tables import outbox
 from stelo.traffic.service_layer import services
-from stelo.traffic.service_layer.unit_of_work import TrafficUnitOfWork
+from stelo.traffic.service_layer.uow import TrafficUnitOfWork
 
 routes = web.RouteTableDef()
 
