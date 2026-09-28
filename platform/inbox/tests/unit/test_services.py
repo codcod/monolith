@@ -1,3 +1,5 @@
+import json
+
 from monobase.uow import AbstractUnitOfWork
 
 from stelo.inbox.domain.model import Message
@@ -15,9 +17,18 @@ class FakeMessageRepository:
         return next((m for m in self.added if m.id == id), None)
 
 
+class FakeOutbox:
+    def __init__(self) -> None:
+        self.rows: list[dict] = []
+
+    async def add(self, rows: list[dict]) -> None:
+        self.rows.extend(rows)
+
+
 class FakeUnitOfWork(AbstractUnitOfWork):
     def __init__(self) -> None:
         self.messages = FakeMessageRepository()
+        self.outbox = FakeOutbox()
         self.committed = False
 
     async def commit(self) -> None:
@@ -30,9 +41,7 @@ class FakeUnitOfWork(AbstractUnitOfWork):
 async def test_submit_message_adds_the_message_and_commits():
     uow = FakeUnitOfWork()
 
-    result = await services.submit_message(
-        "sms", "+1", "hi", uow, publish=_noop_publish
-    )
+    result = await services.submit_message("sms", "+1", "hi", uow)
 
     assert uow.committed
     assert uow.messages.added == [result]
@@ -41,43 +50,24 @@ async def test_submit_message_adds_the_message_and_commits():
     assert result.body == "hi"
 
 
-async def test_submit_message_publishes_the_wire_shape_after_commit():
-    published = []
-
-    async def publish(message):
-        published.append(message)
-
-    result = await services.submit_message(
-        "email", "a@b.com", "hi", FakeUnitOfWork(), publish
-    )
-
-    assert published == [
-        {
-            "id": result.id,
-            "channel": "email",
-            "recipient": "a@b.com",
-            "body": "hi",
-            "status": "received",
-            "created_at": result.received_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        }
-    ]
-
-
-async def test_submit_message_publishes_only_after_commit():
-    order: list[str] = []
-
+async def test_submit_message_enqueues_the_wire_shape_before_commit():
     class TrackingUnitOfWork(FakeUnitOfWork):
         async def commit(self) -> None:
-            order.append("commit")
+            self.rows_at_commit = list(self.outbox.rows)
             await super().commit()
 
-    async def publish(message):
-        order.append("publish")
+    uow = TrackingUnitOfWork()
+    result = await services.submit_message("email", "a@b.com", "hi", uow)
 
-    await services.submit_message("sms", "+1", "hi", TrackingUnitOfWork(), publish)
-
-    assert order == ["commit", "publish"]
-
-
-async def _noop_publish(message) -> None:
-    pass
+    [row] = uow.rows_at_commit
+    assert row["event_id"] == result.id
+    assert row["event_type"] == "MessageReceived"
+    assert row["destination"] == "traffic-in"
+    assert json.loads(row["payload"]) == {
+        "id": result.id,
+        "channel": "email",
+        "recipient": "a@b.com",
+        "body": "hi",
+        "status": "received",
+        "created_at": result.received_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }

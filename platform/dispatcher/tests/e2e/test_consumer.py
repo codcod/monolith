@@ -15,6 +15,11 @@ class FakeTransaction:
         pass
 
 
+class FakeResult:
+    def one_or_none(self) -> None:
+        return None
+
+
 class FakeConnection:
     def __init__(self) -> None:
         self.inserted: list = []
@@ -23,8 +28,9 @@ class FakeConnection:
     async def begin(self) -> FakeTransaction:
         return self.transaction
 
-    async def execute(self, stmt) -> None:
+    async def execute(self, stmt, *args) -> "FakeResult":
         self.inserted.append(stmt)
+        return FakeResult()
 
     async def close(self) -> None:
         pass
@@ -79,5 +85,5 @@ async def test_process_dispatch_in_sends_and_records(monkeypatch):
     await dispatcher_app.process_dispatch_in(app)
 
     assert fake_sender.sent == [("+1", "hi")]
-    assert len(engine.connection.inserted) == 1
+    assert len(engine.connection.inserted) == 2  # the duplicate check and the row
     assert engine.connection.transaction.committed

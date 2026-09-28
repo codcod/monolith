@@ -1,5 +1,5 @@
-import typing as tp
-from collections.abc import Awaitable
+import json
+import logging
 from datetime import UTC, datetime
 
 from stelo.base.messages import Message as WireMessage
@@ -7,18 +7,19 @@ from stelo.base.messages import Message as WireMessage
 from stelo.traffic.domain.model import Message
 from stelo.traffic.service_layer.unit_of_work import TrafficUnitOfWork
 
-PublishFn = tp.Callable[[WireMessage], Awaitable[None]]
+logger = logging.getLogger(__name__)
 
 
 async def route_message(
     incoming: WireMessage,
     uow: TrafficUnitOfWork,
-    publish: PublishFn,
 ) -> None:
     """
-    Record a routing row for `incoming`, then hand it off to dispatcher
-    unchanged (no real routing logic — the channel is whatever the original
-    request specified).
+    Record a routing row for `incoming` and, in the same transaction,
+    enqueue it for dispatcher on the outbox, unchanged (no real routing
+    logic — the channel is whatever the original request specified). An id
+    already recorded is a redelivery (the relays are at-least-once) and is
+    skipped.
     """
     message = Message(
         id=incoming["id"],
@@ -27,9 +28,23 @@ async def route_message(
         routed_at=datetime.now(UTC),
     )
 
-    async with uow:
-        await uow.messages.add(message)
-        await uow.commit()
-
     outgoing: WireMessage = {**incoming, "status": "routed"}
-    await publish(outgoing)
+
+    async with uow:
+        # ponytail: get-then-insert, safe with one consumer per stream; ON
+        # CONFLICT DO NOTHING if a stream ever gets two
+        if await uow.messages.get(message.id) is not None:
+            logger.info("Message %s already recorded, skipping", message.id)
+            return
+        await uow.messages.add(message)
+        await uow.outbox.add(
+            [
+                {
+                    "event_id": message.id,
+                    "event_type": "MessageRouted",
+                    "destination": "dispatch-in",
+                    "payload": json.dumps(outgoing),
+                }
+            ]
+        )
+        await uow.commit()

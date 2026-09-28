@@ -1,6 +1,5 @@
-import typing as tp
+import json
 import uuid
-from collections.abc import Awaitable
 from datetime import UTC, datetime
 
 from stelo.base.messages import Message as WireMessage
@@ -8,16 +7,17 @@ from stelo.base.messages import Message as WireMessage
 from stelo.inbox.domain.model import Channel, Message
 from stelo.inbox.service_layer.unit_of_work import InboxUnitOfWork
 
-PublishFn = tp.Callable[[WireMessage], Awaitable[None]]
-
 
 async def submit_message(
     channel: Channel,
     recipient: str,
     body: str,
     uow: InboxUnitOfWork,
-    publish: PublishFn,
 ) -> Message:
+    """
+    Store the message and, in the same transaction, enqueue its wire shape
+    for `traffic-in` on the outbox; the relay publishes it after commit.
+    """
     message = Message(
         id=str(uuid.uuid4()),
         channel=channel,
@@ -25,10 +25,6 @@ async def submit_message(
         body=body,
         received_at=datetime.now(UTC),
     )
-
-    async with uow:
-        await uow.messages.add(message)
-        await uow.commit()
 
     wire_message: WireMessage = {
         "id": message.id,
@@ -38,6 +34,18 @@ async def submit_message(
         "status": "received",
         "created_at": message.received_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
-    await publish(wire_message)
+    async with uow:
+        await uow.messages.add(message)
+        await uow.outbox.add(
+            [
+                {
+                    "event_id": message.id,
+                    "event_type": "MessageReceived",
+                    "destination": "traffic-in",
+                    "payload": json.dumps(wire_message),
+                }
+            ]
+        )
+        await uow.commit()
 
     return message

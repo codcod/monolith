@@ -1,0 +1,40 @@
+"""create traffic outbox
+
+Revision ID: 2d2e40f2daf6
+Revises: e00649473d3f
+Create Date: 2026-09-28 12:00:00.000000
+
+"""
+
+from collections.abc import Sequence
+
+import sqlalchemy as sa
+from alembic import op
+
+# revision identifiers, used by Alembic.
+revision: str = '2d2e40f2daf6'
+down_revision: str | Sequence[str] | None = 'e00649473d3f'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # Column for column monobase.outbox.outbox_table, which the relay reads.
+    _ = op.create_table(
+        'outbox',
+        sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column('event_id', sa.String(), nullable=False),
+        sa.Column('event_type', sa.String(), nullable=False),
+        sa.Column('destination', sa.String(), nullable=False),
+        sa.Column('payload', sa.Text(), nullable=False),
+        sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+        sa.Column('published_at', sa.DateTime(timezone=True), nullable=True),
+        sa.PrimaryKeyConstraint('id'),
+        schema='traffic',
+    )
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    op.drop_table('outbox', schema='traffic')

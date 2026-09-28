@@ -12,7 +12,7 @@ from stelo.base.config import Config, setup_app
 from stelo.inbox.entrypoints.app import build_app
 
 
-def _serve_one(config: Config) -> None:
+def _serve_one(config: Config, relay: bool) -> None:
     """
     Run one HTTP worker on its own event loop, bound to a socket shared
     (via SO_REUSEPORT) with every other worker process — the kernel
@@ -24,7 +24,7 @@ def _serve_one(config: Config) -> None:
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     sock.bind(('0.0.0.0', 8080))
-    web.run_app(build_app(config), sock=sock)
+    web.run_app(build_app(config, relay=relay), sock=sock)
 
 
 def _serve(config: Config, workers: int) -> None:
@@ -37,10 +37,11 @@ def _serve(config: Config, workers: int) -> None:
     process manager; add restart-on-crash if that's ever needed too.
     """
     pids = []
-    for _ in range(workers):
+    for i in range(workers):
         pid = os.fork()
         if pid == 0:
-            _serve_one(config)
+            # One outbox relay per table: only the first worker runs it.
+            _serve_one(config, relay=i == 0)
             sys.exit(0)
         pids.append(pid)
 
@@ -67,6 +68,6 @@ if __name__ == '__main__':
     if workers > 1:
         _serve(config['inbox'], workers)
     else:
-        _serve_one(config['inbox'])
+        _serve_one(config['inbox'], relay=True)
 
 # vim: ft=py

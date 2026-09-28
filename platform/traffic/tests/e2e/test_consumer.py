@@ -15,6 +15,11 @@ class FakeTransaction:
         pass
 
 
+class FakeResult:
+    def one_or_none(self) -> None:
+        return None
+
+
 class FakeConnection:
     def __init__(self) -> None:
         self.inserted: list = []
@@ -23,8 +28,9 @@ class FakeConnection:
     async def begin(self) -> FakeTransaction:
         return self.transaction
 
-    async def execute(self, stmt) -> None:
+    async def execute(self, stmt, *args) -> "FakeResult":
         self.inserted.append(stmt)
+        return FakeResult()
 
     async def close(self) -> None:
         pass
@@ -46,7 +52,7 @@ async def test_health_ok():
         assert resp.status == 200
 
 
-async def test_process_traffic_in_inserts_and_republishes(monkeypatch):
+async def test_process_traffic_in_records_and_enqueues(monkeypatch):
     incoming = {
         "id": "1",
         "channel": "sms",
@@ -60,23 +66,14 @@ async def test_process_traffic_in_inserts_and_republishes(monkeypatch):
         assert stream == "traffic-in"
         yield incoming
 
-    published: list = []
-
-    async def fake_publish(client, stream, message):
-        published.append((stream, message))
-
     monkeypatch.setattr(traffic_app, "consume", fake_consume)
-    monkeypatch.setattr(traffic_app, "stream_publish", fake_publish)
 
     engine = FakeEngine()
     app = {traffic_app.DB_KEY: engine, traffic_app.RABBIT_KEY: object()}
 
     await traffic_app.process_traffic_in(app)
 
-    assert len(engine.connection.inserted) == 1
+    # the duplicate check, the routing row and its outbox row, committed;
+    # nothing is published inline any more (the relay does that)
+    assert len(engine.connection.inserted) == 3
     assert engine.connection.transaction.committed
-    assert len(published) == 1
-    stream, message = published[0]
-    assert stream == "dispatch-in"
-    assert message["status"] == "routed"
-    assert message["id"] == "1"
