@@ -14,22 +14,22 @@ install:
     uv sync --project {{ repo_root }} --package stelo-base --inexact
 
 [group('test')]
-test: install
-    uv run --project {{ repo_root }} pytest -q
+test:
+    uv run --project {{ repo_root }} --package stelo-base --group dev pytest -q
 
 # Auto-fix and reformat this module's code
 [group('quality')]
 fmt: install
-    uv run --project {{ repo_root }} ruff check --fix src tests
-    uv run --project {{ repo_root }} ruff format src tests
+    uv run --project {{ repo_root }} --frozen ruff check --fix src tests
+    uv run --project {{ repo_root }} --frozen ruff format src tests
 
 # Lint + format-check + type-check this module (ty only checks src — tests
 # use loose fakes/doubles that aren't meant to type-check as the real thing)
 [group('quality')]
 lint: install
-    uv run --project {{ repo_root }} ruff check src tests
-    uv run --project {{ repo_root }} ruff format --check src tests
-    uv run --project {{ repo_root }} ty check src
+    uv run --project {{ repo_root }} --frozen ruff check src tests
+    uv run --project {{ repo_root }} --frozen ruff format --check src tests
+    uv run --project {{ repo_root }} --frozen ty check src
 
 [group('dev')]
 clean:

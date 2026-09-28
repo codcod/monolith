@@ -28,17 +28,20 @@ logs:
 # Auto-fix and reformat every module (ruff)
 [group('quality')]
 fmt:
-    for m in {{ MODULES }}; do just $m::fmt; done
+    uv lock -q
+    for m in {{ MODULES }}; do UV_FROZEN=1 just $m::fmt; done
 
 # Lint + format-check + type-check every module (ruff + ty)
 [group('quality')]
 lint:
-    for m in {{ MODULES }}; do just $m::lint; done
+    uv lock -q
+    for m in {{ MODULES }}; do UV_FROZEN=1 just $m::lint; done
 
 # Run every module's test suite
 [group('test')]
 test:
-    for m in {{ MODULES }}; do just $m::test; done
+    uv lock -q
+    for m in {{ MODULES }}; do UV_FROZEN=1 just $m::test; done
 
 # Mirror the top-level GHA integration job: build, boot stack, check inbox health, tear down
 [group('ci')]

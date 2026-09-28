@@ -13,25 +13,25 @@ install:
 # Run against the dockerized postgres — `just up` first
 [group('dev')]
 run: install
-    uv run --project {{ repo_root }} bin/stelo-admin config/config.toml
+    uv run --project {{ repo_root }} --frozen bin/stelo-admin config/config.toml
 
 [group('test')]
-test: install
-    uv run --project {{ repo_root }} pytest -q
+test:
+    uv run --project {{ repo_root }} --package stelo-admin --group dev pytest -q
 
 # Auto-fix and reformat this module's code
 [group('quality')]
 fmt: install
-    uv run --project {{ repo_root }} ruff check --fix src tests
-    uv run --project {{ repo_root }} ruff format src tests
+    uv run --project {{ repo_root }} --frozen ruff check --fix src tests
+    uv run --project {{ repo_root }} --frozen ruff format src tests
 
 # Lint + format-check + type-check this module (ty only checks src — tests
 # use loose fakes/doubles that aren't meant to type-check as the real thing)
 [group('quality')]
 lint: install
-    uv run --project {{ repo_root }} ruff check src tests
-    uv run --project {{ repo_root }} ruff format --check src tests
-    uv run --project {{ repo_root }} ty check src
+    uv run --project {{ repo_root }} --frozen ruff check src tests
+    uv run --project {{ repo_root }} --frozen ruff format --check src tests
+    uv run --project {{ repo_root }} --frozen ty check src
 
 # Image build only — the container needs postgres (with inbox/traffic/
 # dispatcher's schemas already migrated) to do anything useful, so run it
