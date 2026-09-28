@@ -2,9 +2,9 @@ from logging.config import fileConfig
 
 import sqlalchemy as sa
 from alembic import context
+from monobase.config import read_config
+from monobase.migrations import run_migrations_online
 from sqlalchemy.dialects.postgresql import UUID
-from stelo.base.config import read_config
-from stelo.base.migrations import run_migrations_online
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

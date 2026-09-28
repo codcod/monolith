@@ -4,7 +4,8 @@ import argparse
 
 from aiohttp import web
 
-from stelo.base.config import read_config, setup_app
+from monobase.config import read_config
+from stelo.base.config import setup_app
 from stelo.traffic.entrypoints.app import build_app
 
 if __name__ == "__main__":

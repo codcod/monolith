@@ -17,8 +17,8 @@ from datetime import UTC, datetime
 
 import pytest
 import sqlalchemy as sa
+from monobase.db import make_engine
 from sqlalchemy.ext.asyncio import AsyncEngine
-from stelo.base.db import make_engine
 
 from stelo.inbox.domain.model import Message
 from stelo.inbox.service_layer.unit_of_work import InboxUnitOfWork

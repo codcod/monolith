@@ -7,7 +7,8 @@ import socket
 import sys
 
 from aiohttp import web
-from stelo.base.config import Config, read_config, setup_app
+from monobase.config import read_config
+from stelo.base.config import Config, setup_app
 from stelo.inbox.entrypoints.app import build_app
 
 

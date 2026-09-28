@@ -42,15 +42,17 @@ plus a shared library, chained through RabbitMQ Streams:
 - **`admin`** — read-only dashboard ("Relay Console") over Server-Sent
   Events, showing pipeline throughput/latency/errors across the other
   three modules' data. Owns no schema of its own.
-- **`stelo-base`** — shared config/logging/DB/messaging/security helpers
-  and the Repository/Unit-of-Work base classes. Not deployed on its own;
-  every service above depends on it.
+- **`stelo-base`** — shared streams/messaging/web-app/security helpers, the
+  `Config` type and `setup_app`. Not deployed on its own; every service
+  above depends on it. The persistence and config helpers (`make_engine`,
+  the Alembic runner, the Repository/Unit-of-Work bases,
+  `read_config`/`setup_logging`) come from [`monobase`](https://github.com/codcod/monobase), pinned by tag.
 
 ## Architecture
 
 Data access goes through the **Repository** and **Unit of Work** patterns
 (Percival & Gregory, *Architecture Patterns with Python*), kept on plain
-SQLAlchemy Core rather than the ORM — `stelo-base` provides
+SQLAlchemy Core rather than the ORM — `monobase` provides
 `AbstractRepository`/`AbstractUnitOfWork`/`SqlAlchemyUnitOfWork`; each
 service builds its own concrete repository/UoW on top. `inbox`, `traffic`,
 and `dispatcher` follow the book's layout:

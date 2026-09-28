@@ -9,7 +9,7 @@ All notable changes to this project are documented here. Format follows
 
 ### Added
 
-- `stelo-base`: shared config/logging/DB/messaging/security helpers, as a uv
+- `stelo-base`: shared streams/messaging/web-app/security helpers, as a uv
   workspace package other services depend on.
 - `stelo-inbox`: receives communication requests over HTTP, persists them, and
   publishes them onto the `traffic-in` RabbitMQ stream.
@@ -24,6 +24,11 @@ All notable changes to this project are documented here. Format follows
 
 ### Changed
 
+- Every service and `stelo-base` now take `make_engine`, the Alembic runner,
+  the Repository/Unit-of-Work bases and `read_config`/`setup_logging` from
+  [`monobase`](https://github.com/codcod/monobase) v0.1.0, pinned by archive
+  URL in the root `pyproject.toml`. Those modules and their tests leave
+  `stelo-base`, and `setup_app` passes the log level to `setup_logging`.
 - Converted `platform/` to a [uv workspace](pyproject.toml) (`stelo-base`,
   `stelo-inbox`, `stelo-traffic`, `stelo-dispatcher`) with one shared lockfile,
   replacing the previous per-module `pip`/`venv` setup.
