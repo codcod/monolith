@@ -13,17 +13,17 @@ install:
 # Run against the dockerized postgres/rabbitmq — `just up` first
 [group('dev')]
 run: install
-    uv run --project {{ repo_root }} bin/stelo-inbox config/config.toml
+    uv run --project {{ repo_root }} --frozen bin/stelo-inbox config/config.toml
 
 [group('test')]
-test: install
-    uv run --project {{ repo_root }} pytest -q
+test:
+    uv run --project {{ repo_root }} --package stelo-inbox --group dev pytest -q
 
 # Repository/UoW against a real Postgres — needs `just up` first. Kept out
 # of the default `test` recipe so that one stays fast and docker-free.
 [group('test')]
-test-integration: install
-    RUN_INTEGRATION_TESTS=1 uv run --project {{ repo_root }} pytest tests/integration -q
+test-integration:
+    RUN_INTEGRATION_TESTS=1 uv run --project {{ repo_root }} --package stelo-inbox --group dev pytest tests/integration -q
 
 # Only exercises /health — needs a live instance: `just up`, or `just run`.
 [group('test')]
@@ -32,29 +32,29 @@ perf:
 
 [group('db')]
 migrate: install
-    uv run --project {{ repo_root }} python -m alembic upgrade head
+    uv run --project {{ repo_root }} --frozen python -m alembic upgrade head
 
 [group('db')]
 migration name: install
-    uv run --project {{ repo_root }} python -m alembic revision --autogenerate -m "{{ name }}"
+    uv run --project {{ repo_root }} --frozen python -m alembic revision --autogenerate -m "{{ name }}"
 
 [group('db')]
 downgrade rev="-1": install
-    uv run --project {{ repo_root }} python -m alembic downgrade {{ rev }}
+    uv run --project {{ repo_root }} --frozen python -m alembic downgrade {{ rev }}
 
 # Auto-fix and reformat this module's code
 [group('quality')]
 fmt: install
-    uv run --project {{ repo_root }} ruff check --fix src tests migrations/env.py
-    uv run --project {{ repo_root }} ruff format src tests migrations/env.py
+    uv run --project {{ repo_root }} --frozen ruff check --fix src tests migrations/env.py
+    uv run --project {{ repo_root }} --frozen ruff format src tests migrations/env.py
 
 # Lint + format-check + type-check this module (ty only checks src — tests
 # use loose fakes/doubles that aren't meant to type-check as the real thing)
 [group('quality')]
 lint: install
-    uv run --project {{ repo_root }} ruff check src tests migrations/env.py
-    uv run --project {{ repo_root }} ruff format --check src tests migrations/env.py
-    uv run --project {{ repo_root }} ty check src
+    uv run --project {{ repo_root }} --frozen ruff check src tests migrations/env.py
+    uv run --project {{ repo_root }} --frozen ruff format --check src tests migrations/env.py
+    uv run --project {{ repo_root }} --frozen ty check src
 
 # Image build only — the container needs postgres/rabbitmq to do anything
 # useful, so run it via `just up`, not standalone.
