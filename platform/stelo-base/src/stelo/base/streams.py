@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import typing as tp
 import weakref
 from collections.abc import AsyncIterator, Mapping
@@ -7,10 +8,11 @@ import orjson
 from rbfly.streams import Offset, StreamsClient, streams_client
 
 # One rbfly publisher per (client, stream), reused for the client's
-# lifetime. Opening and tearing one down each cost a broker round trip and
-# a slot in a fixed-size, connection-scoped slot map — opening a fresh one
-# per message exhausts that slot map under concurrent load ("Slot map is
-# full" / "Maximum number of publishers created").
+# lifetime unless a send on it fails (see `publish`). Opening and tearing
+# one down each cost a broker round trip and a slot in a fixed-size,
+# connection-scoped slot map — opening a fresh one per message exhausts that
+# slot map under concurrent load ("Slot map is full" / "Maximum number of
+# publishers created").
 #
 # The lock below serializes every publish for a given client, not just
 # publisher creation: rbfly's Publisher reads its message-id counter, awaits
@@ -26,6 +28,13 @@ _publishers: "weakref.WeakKeyDictionary[StreamsClient, dict[str, tuple[tp.Any, t
 _publisher_locks: "weakref.WeakKeyDictionary[StreamsClient, asyncio.Lock]" = (
     weakref.WeakKeyDictionary()
 )
+# Strong refs to in-flight closes of evicted publishers: the event loop holds
+# tasks only weakly.
+# ponytail: the close runs outside the lock above, so it relies on the broker
+# answering its delete before the next publish creates a publisher (rbfly
+# frees the slot id twice, and could clear a new publisher that reused it);
+# await the pending close before creating a publisher if that ever bites.
+_closing: set[asyncio.Task[None]] = set()
 
 
 def connect(broker_url: str) -> StreamsClient:
@@ -56,7 +65,27 @@ async def publish(
             streams[stream] = entry
 
         _, publisher = entry
-        _ = await publisher.send(orjson.dumps(message))
+        try:
+            _ = await publisher.send(orjson.dumps(message))
+        except BaseException:
+            # A send that failed or was cancelled mid-flight (e.g. by the
+            # outbox relay's deliver_timeout) can leave the publisher's
+            # message-id counter behind (see above), so every later send on
+            # it would hang. Drop it: a fresh publisher asks the broker for
+            # its last id. Close the old one too, or it stays declared on the
+            # broker and the fresh one can be refused; in the background,
+            # since this task may be cancelled and a close on a broken
+            # connection must not hold the lock.
+            cm, _ = streams.pop(stream)
+            task = asyncio.ensure_future(_close_quietly(cm))
+            _closing.add(task)
+            task.add_done_callback(_closing.discard)
+            raise
+
+
+async def _close_quietly(cm: tp.Any) -> None:
+    with contextlib.suppress(Exception):
+        _ = await cm.__aexit__(None, None, None)
 
 
 async def consume(

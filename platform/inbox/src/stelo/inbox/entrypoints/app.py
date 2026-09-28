@@ -2,10 +2,9 @@ import typing as tp
 
 from aiohttp import web
 from stelo.base.config import Config
-from stelo.base.messages import Message as WireMessage
-from stelo.base.streams import publish as stream_publish
-from stelo.base.webapp import DB_KEY, RABBIT_KEY, make_app
+from stelo.base.webapp import DB_KEY, make_app, run_outbox_relay
 
+from stelo.inbox.adapters.tables import outbox
 from stelo.inbox.service_layer import services
 from stelo.inbox.service_layer.unit_of_work import InboxUnitOfWork
 
@@ -32,14 +31,18 @@ async def create_message(request: web.Request) -> web.Response:
     ):
         raise web.HTTPBadRequest(reason="channel, recipient and body are required")
 
-    async def publish(message: WireMessage) -> None:
-        await stream_publish(request.app[RABBIT_KEY], "traffic-in", message)
-
     uow = InboxUnitOfWork(request.app[DB_KEY])
-    message = await services.submit_message(channel, recipient, body, uow, publish)
+    message = await services.submit_message(channel, recipient, body, uow)
 
     return web.json_response({"id": message.id}, status=202)
 
 
-def build_app(config: Config) -> web.Application:
-    return make_app(config, routes=routes, db_dsn=config["db"])
+def build_app(config: Config, *, relay: bool = True) -> web.Application:
+    """
+    `relay=False` leaves the outbox relay out: monobase runs one relay per
+    outbox table, and bin/stelo-inbox forks several workers over this app.
+    """
+    app = make_app(config, routes=routes, db_dsn=config["db"])
+    if relay:
+        run_outbox_relay(app, outbox)
+    return app

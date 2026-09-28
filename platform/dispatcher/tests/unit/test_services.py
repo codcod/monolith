@@ -62,3 +62,14 @@ async def test_dispatch_message_records_the_outcome_and_commits():
     recorded = uow.messages.added[0]
     assert recorded.id == "1"
     assert recorded.send_status == "sent"
+
+
+async def test_dispatch_message_skips_a_duplicate_id():
+    uow = FakeUnitOfWork()
+    await services.dispatch_message(INCOMING, uow, FakeSender())
+    sender = FakeSender()
+
+    await services.dispatch_message(INCOMING, uow, sender)
+
+    assert sender.sent == []
+    assert len(uow.messages.added) == 1

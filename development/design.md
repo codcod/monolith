@@ -22,15 +22,15 @@ Streams:
 client
   |  HTTP POST /messages
   v
-inbox        --publish--> [traffic-in stream]
+inbox        --outbox relay--> [traffic-in stream]
   |
-  v (own schema)
+  v (own schema: messages + outbox, one transaction)
 inbox DB
 
 traffic      --consume--> [traffic-in stream]
   |
-  |--publish--> [dispatch-in stream]
-  v (own schema)
+  |--outbox relay--> [dispatch-in stream]
+  v (own schema: messages + outbox, one transaction)
 traffic DB
 
 dispatcher   --consume--> [dispatch-in stream]
@@ -41,14 +41,32 @@ dispatcher DB
 ```
 
 - **inbox**: only module with a public HTTP API. Accepts a message request,
-  validates it minimally, writes an intake row, publishes it to the
-  `traffic-in` stream.
+  validates it minimally, writes an intake row and an outbox row in one
+  transaction; a relay publishes it to the `traffic-in` stream.
 - **traffic**: background stream consumer. Reads from `traffic-in`, writes a
-  routing row, republishes to `dispatch-in`. No real routing logic — for this
+  routing row and an outbox row for `dispatch-in` in one transaction, and
+  skips an id it has already routed. No real routing logic — for this
   scaffold the channel is whatever the caller specified in the payload.
 - **dispatcher**: background stream consumer. Reads from `dispatch-in`,
   calls a stub `Sender` for the requested channel (logs "would send via
-  X"), writes a final status row.
+  X"), writes a final status row. Skips an id it has already sent.
+
+**Outbox.** inbox and traffic never publish straight after a commit: a
+crash in between would lose a stored message. Each has an `outbox` table in
+its own schema (`monobase.outbox.outbox_table`, created by its own Alembic
+revision), and the service adds the wire message to it (`event_id` = message
+id, `destination` = stream name, `payload` = the JSON wire message) in the
+same transaction as its own row. `stelo.base.webapp.run_outbox_relay` runs
+monobase's `run_relay` for the app's lifetime and publishes each row to its
+`destination`. monobase allows one relay per table, so inbox, which forks
+`workers` processes, runs it in the first worker only. Delivery into the
+stream is at-least-once, and consumers subscribe at `Offset.NEXT`, so a
+message published before a consumer first subscribes is not consumed. traffic
+and dispatcher look the id up first and skip one they have already recorded
+(a redelivered id would otherwise hit the primary key and kill the consumer
+task). A failed or cancelled stream send (the relay's `deliver_timeout`)
+drops and closes the cached rbfly publisher, so the next send starts a fresh
+one.
 
 Each module also exposes `GET /health` over aiohttp so it can run as a normal
 web service in compose/k8s even though inbox is the only one with real
@@ -131,7 +149,7 @@ platform/stelo-base/
     config.py          # Config TypedDict + setup_app (logging via monobase, uvloop)
     streams.py          # thin wrapper over rbfly: publish(), consume()
     security.py         # aiohttp middleware: request-id + bearer-token stub
-    webapp.py           # make_app()/run_in_background() + typed AppKeys
+    webapp.py           # make_app()/run_in_background()/run_outbox_relay() + typed AppKeys
     channels.py         # Sender protocol + Sms/Email/WhatsApp stub senders
     messages.py         # shared Message TypedDict
   tests/                # unit tests for every module above
@@ -155,6 +173,8 @@ platform/stelo-base/
   on startup and dispose on shutdown the same way in every module.
   `run_in_background(app, factory)` runs a coroutine (traffic/dispatcher's
   consumer loop) for the app's lifetime alongside its `/health` route.
+  `run_outbox_relay(app, table)` uses it to run monobase's outbox relay,
+  publishing each row to the stream in its `destination` (see "Outbox").
 - **channels.py**:
   ```python
   class Sender(Protocol):
@@ -184,11 +204,12 @@ Each of inbox/traffic/dispatcher follows the layered structure from
 *Architecture Patterns with Python* (Percival & Gregory): `domain` (the
 module's own persisted entity — distinct from the wire-format `Message`
 crossing stream boundaries), `service_layer` (orchestration: builds the
-domain object, runs it through a Unit of Work, then calls an injected
-`publish`/`sender` side effect), `adapters` (the Core table + a Repository
-converting to/from the domain dataclass), `entrypoints` (thin aiohttp route
-handlers / stream-consumer loop, wiring a concrete `UnitOfWork` per
-request/message from `app[DB_KEY]`):
+domain object, runs it through a Unit of Work, adding the outgoing message to
+the UoW's outbox (inbox, traffic) or calling an injected `sender`
+(dispatcher)), `adapters` (the Core table + a Repository converting to/from
+the domain dataclass), `entrypoints` (thin aiohttp route handlers /
+stream-consumer loop, wiring a concrete `UnitOfWork` per request/message from
+`app[DB_KEY]`):
 
 ```
 platform/inbox/
@@ -205,10 +226,10 @@ platform/inbox/
     domain/
       model.py          # Message dataclass (id, channel, recipient, body, received_at)
     service_layer/
-      services.py         # submit_message(channel, recipient, body, uow, publish)
-      unit_of_work.py       # InboxUnitOfWork(SqlAlchemyUnitOfWork)
+      services.py         # submit_message(channel, recipient, body, uow)
+      unit_of_work.py       # InboxUnitOfWork(SqlAlchemyUnitOfWork), binds messages + outbox
     adapters/
-      tables.py            # messages_table (plain Core sa.table(), not an ORM mapping)
+      tables.py            # messages_table (plain Core sa.table(), not an ORM mapping) + outbox
       repository.py          # SqlAlchemyMessageRepository(AbstractRepository[Message])
     entrypoints/
       app.py                 # routes: POST /messages, GET /health; build_app()
@@ -220,16 +241,17 @@ platform/inbox/
 ```
 
 - **inbox**: `POST /messages` validates `{channel, recipient, body}`,
-  builds a domain `Message`, adds it via `InboxUnitOfWork.messages` and
-  commits, then publishes the wire-format shape to `traffic-in`; returns
-  `202` with the message id.
+  builds a domain `Message`, adds it via `InboxUnitOfWork.messages` and its
+  wire-format shape via `InboxUnitOfWork.outbox`, and commits; returns `202`
+  with the message id. The relay publishes it to `traffic-in`.
 - **traffic**: on startup, spawns a background task subscribing to
-  `traffic-in`; for each message, records a routing row via
-  `TrafficUnitOfWork`, then republishes unchanged to `dispatch-in`.
+  `traffic-in`; for each message not already routed, records a routing row
+  and an outbox row for `dispatch-in` via `TrafficUnitOfWork`. A second task
+  runs the outbox relay.
 - **dispatcher**: on startup, spawns a background task subscribing to
-  `dispatch-in`; for each message, looks up `SENDERS[channel]`, calls
-  `.send()`, then records the outcome via `DispatcherUnitOfWork` with
-  `send_status="sent"`.
+  `dispatch-in`; for each message not already sent, looks up
+  `SENDERS[channel]`, calls `.send()`, then records the outcome via
+  `DispatcherUnitOfWork` with `send_status="sent"`.
 
 `admin` is read-only (owns no schema, only queries the other three
 modules') and skips `domain`/`service_layer`/Repository/UoW — Repository/UoW
@@ -283,7 +305,7 @@ mirroring *Architecture Patterns with Python*'s layout:
 - `e2e/`: aiohttp test client (inbox) / consumer function called directly
   (traffic, dispatcher), with DB/RabbitMQ faked at the same seam the app
   code uses (`app[DB_KEY]`/`app[RABBIT_KEY]`, or by monkeypatching
-  `consume`/`stream_publish` in the entrypoints module under test).
+  `consume` in the entrypoints module under test).
 
 `stelo-base` and `admin` keep a flatter split (no `integration/` tier):
 
@@ -384,8 +406,9 @@ one verified directly against real venvs throughout development.
 
 ## Explicitly out of scope (scaffold cuts)
 
-- No retries, dead-letter handling, or delivery guarantees beyond what
-  RabbitMQ Streams gives for free.
+- No dead-letter handling, and no delivery guarantee beyond the outbox
+  relay's at-least-once publish into each stream (retried with backoff) and
+  what RabbitMQ Streams gives for free.
 - No real SMS/email/WhatsApp provider integration — `channels.py` senders
   only log.
 - No real auth/tenancy — `security.py` is a stub seam, not a security

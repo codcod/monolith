@@ -4,6 +4,7 @@ import sqlalchemy as sa
 from alembic import context
 from monobase.config import read_config
 from monobase.migrations import run_migrations_online
+from monobase.outbox import outbox_table
 from sqlalchemy.dialects.postgresql import UUID
 
 # this is the Alembic Config object, which provides
@@ -24,6 +25,7 @@ _ = sa.Table(
     sa.Column("recipient", sa.Text(), nullable=False),
     sa.Column("routed_at", sa.DateTime(timezone=True), nullable=False),
 )
+_ = outbox_table(target_metadata, "traffic")
 
 
 def get_dsn() -> str:

@@ -24,6 +24,15 @@ All notable changes to this project are documented here. Format follows
 
 ### Changed
 
+- `stelo-inbox`, `stelo-traffic`: publish through a transactional outbox
+  (`monobase.outbox`, one Alembic revision each for the `outbox` table) instead
+  of straight after the commit, so a crash in between no longer loses a
+  message. inbox runs the relay in its first worker only.
+- `stelo-traffic`, `stelo-dispatcher`: skip a message id they have already
+  recorded, since the relay delivers at-least-once.
+- `stelo-base`: `webapp.run_outbox_relay`; `streams.publish` drops a publisher
+  whose send failed or was cancelled.
+
 - Every service and `stelo-base` now take `make_engine`, the Alembic runner,
   the Repository/Unit-of-Work bases and `read_config`/`setup_logging` from
   [`monobase`](https://github.com/codcod/monobase) v0.1.0, pinned by archive

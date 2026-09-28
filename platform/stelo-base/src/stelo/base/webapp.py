@@ -1,17 +1,20 @@
 import asyncio
 import contextlib
+import json
 import typing as tp
 from collections.abc import AsyncIterator, Coroutine, Iterable
 
 from aiohttp import web
 from aiohttp.typedefs import Middleware
 from monobase.db import make_engine
+from monobase.outbox import run_relay
 from rbfly.streams import StreamsClient
+from sqlalchemy import Table
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from .config import Config
 from .security import auth_middleware, request_id_middleware
-from .streams import connect
+from .streams import connect, publish
 
 CONFIG_KEY = web.AppKey("config", Config)
 DB_KEY = web.AppKey("db", AsyncEngine)
@@ -88,3 +91,21 @@ def run_in_background(
             await task
 
     app.cleanup_ctx.append(_ctx)
+
+
+def run_outbox_relay(app: web.Application, table: Table) -> None:
+    """
+    Run monobase's outbox relay over `table` for the app's lifetime,
+    publishing each row's JSON `payload` to the stream named in its
+    `destination`. Delivery is at-least-once, so consumers must tolerate a
+    duplicate message id. Run one per outbox table.
+    """
+
+    async def relay(app: web.Application) -> None:
+        async def deliver(row: dict[str, tp.Any]) -> None:
+            payload = json.loads(row["payload"])
+            await publish(app[RABBIT_KEY], row["destination"], payload)
+
+        await run_relay(app[DB_KEY], table, deliver)
+
+    run_in_background(app, relay)

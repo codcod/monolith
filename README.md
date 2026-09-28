@@ -10,15 +10,15 @@ for the full design rationale.
 client
   |  HTTP POST /messages
   v
-inbox        --publish--> [traffic-in stream]
+inbox        --outbox relay--> [traffic-in stream]
   |
-  v (own schema)
+  v (own schema: messages + outbox, one transaction)
 inbox DB
 
 traffic      --consume--> [traffic-in stream]
   |
-  |--publish--> [dispatch-in stream]
-  v (own schema)
+  |--outbox relay--> [dispatch-in stream]
+  v (own schema: messages + outbox, one transaction)
 traffic DB
 
 dispatcher   --consume--> [dispatch-in stream]
@@ -34,11 +34,14 @@ Four independently deployable [aiohttp](https://docs.aiohttp.org/) services
 plus a shared library, chained through RabbitMQ Streams:
 
 - **`inbox`** — the only module with a public HTTP API. Accepts a message
-  request, writes an intake row, publishes it to the `traffic-in` stream.
+  request, writes an intake row and an outbox row; its relay publishes it
+  to the `traffic-in` stream.
 - **`traffic`** — background stream consumer. Routes each message (no real
-  routing logic in this scaffold) and republishes to `dispatch-in`.
+  routing logic in this scaffold) and enqueues it for `dispatch-in` through
+  its own outbox. Skips an id it has already routed.
 - **`dispatcher`** — background stream consumer. Sends each message over a
-  stub `Sender` for its channel and records the outcome.
+  stub `Sender` for its channel and records the outcome. Skips an id it has
+  already sent.
 - **`admin`** — read-only dashboard ("Relay Console") over Server-Sent
   Events, showing pipeline throughput/latency/errors across the other
   three modules' data. Owns no schema of its own.
@@ -47,6 +50,14 @@ plus a shared library, chained through RabbitMQ Streams:
   above depends on it. The persistence and config helpers (`make_engine`,
   the Alembic runner, the Repository/Unit-of-Work bases,
   `read_config`/`setup_logging`) come from [`monobase`](https://github.com/codcod/monobase), pinned by tag.
+
+Publishing goes through a transactional outbox
+([`monobase.outbox`](https://github.com/codcod/monobase)): inbox and traffic
+write the wire message to their schema's `outbox` table in the same
+transaction as their own row, and a relay task publishes it afterwards. A
+crash between the commit and the publish no longer loses a message. Delivery
+into the stream is at-least-once, so traffic and dispatcher skip an id they
+have already recorded.
 
 ## Architecture
 

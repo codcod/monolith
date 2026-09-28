@@ -1,3 +1,5 @@
+import json
+
 from monobase.uow import AbstractUnitOfWork
 
 from stelo.traffic.domain.model import Message
@@ -24,9 +26,18 @@ class FakeMessageRepository:
         return next((m for m in self.added if m.id == id), None)
 
 
+class FakeOutbox:
+    def __init__(self) -> None:
+        self.rows: list[dict] = []
+
+    async def add(self, rows: list[dict]) -> None:
+        self.rows.extend(rows)
+
+
 class FakeUnitOfWork(AbstractUnitOfWork):
     def __init__(self) -> None:
         self.messages = FakeMessageRepository()
+        self.outbox = FakeOutbox()
         self.committed = False
 
     async def commit(self) -> None:
@@ -39,7 +50,7 @@ class FakeUnitOfWork(AbstractUnitOfWork):
 async def test_route_message_adds_a_routing_row_and_commits():
     uow = FakeUnitOfWork()
 
-    await services.route_message(INCOMING, uow, publish=_noop_publish)
+    await services.route_message(INCOMING, uow)
 
     assert uow.committed
     assert len(uow.messages.added) == 1
@@ -49,16 +60,29 @@ async def test_route_message_adds_a_routing_row_and_commits():
     assert routed.recipient == "+1"
 
 
-async def test_route_message_republishes_with_status_routed():
-    published = []
+async def test_route_message_enqueues_it_for_dispatch_before_commit():
+    class TrackingUnitOfWork(FakeUnitOfWork):
+        async def commit(self) -> None:
+            self.rows_at_commit = list(self.outbox.rows)
+            await super().commit()
 
-    async def publish(message):
-        published.append(message)
+    uow = TrackingUnitOfWork()
+    await services.route_message(INCOMING, uow)
 
-    await services.route_message(INCOMING, FakeUnitOfWork(), publish)
+    [row] = uow.rows_at_commit
+    assert row["event_id"] == "1"
+    assert row["event_type"] == "MessageRouted"
+    assert row["destination"] == "dispatch-in"
+    assert json.loads(row["payload"]) == {**INCOMING, "status": "routed"}
 
-    assert published == [{**INCOMING, "status": "routed"}]
 
+async def test_route_message_skips_a_duplicate_id():
+    uow = FakeUnitOfWork()
+    await services.route_message(INCOMING, uow)
+    uow.committed = False
 
-async def _noop_publish(message) -> None:
-    pass
+    await services.route_message(INCOMING, uow)
+
+    assert len(uow.messages.added) == 1
+    assert len(uow.outbox.rows) == 1
+    assert not uow.committed
