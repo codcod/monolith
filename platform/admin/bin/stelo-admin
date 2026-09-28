@@ -4,8 +4,9 @@ import argparse
 
 from aiohttp import web
 
+from monobase.config import read_config
 from stelo.admin.entrypoints.app import build_app
-from stelo.base.config import read_config, setup_app
+from stelo.base.config import setup_app
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

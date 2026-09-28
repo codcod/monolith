@@ -94,7 +94,7 @@ require a mapper, only a place to put "one transaction, one collection of
 domain objects."
 
 ```python
-# stelo-base
+# monobase.db
 def make_engine(dsn: str) -> AsyncEngine:
     return create_async_engine(dsn, pool_pre_ping=True)
 ```
@@ -116,39 +116,30 @@ depended on by the other three as an unpinned local dependency (a real
 package index would replace this later, out of scope now — see
 "Versioning / release").
 
+The persistence and config helpers that used to live here — `make_engine`,
+the async Alembic `env.py` runner, `AbstractRepository`,
+`AbstractUnitOfWork`/`SqlAlchemyUnitOfWork` and `read_config`/`setup_logging`
+— moved to [`monobase`](https://github.com/codcod/monobase) (`monobase.db`, `.migrations`, `.repository`, `.uow`,
+`.config`), which every module depends on, pinned by tag in the root
+`pyproject.toml`. What follows is what stays in stelo-base.
+
 ```
 platform/stelo-base/
   pyproject.toml       # hatchling, PEP 621 [project] table
   src/stelo/base/
     __init__.py
-    config.py          # read_config/setup_logging/setup_app
-    db.py               # make_engine()
-    migrations.py       # shared async Alembic env.py runner
+    config.py          # Config TypedDict + setup_app (logging via monobase, uvloop)
     streams.py          # thin wrapper over rbfly: publish(), consume()
     security.py         # aiohttp middleware: request-id + bearer-token stub
     webapp.py           # make_app()/run_in_background() + typed AppKeys
     channels.py         # Sender protocol + Sms/Email/WhatsApp stub senders
     messages.py         # shared Message TypedDict
-    repository.py       # AbstractRepository[T] — add()/get(), no DB-specific code
-    unit_of_work.py      # AbstractUnitOfWork + SqlAlchemyUnitOfWork (connection/transaction lifecycle)
   tests/                # unit tests for every module above
 ```
 
-- **config.py**: `read_config`/`setup_logging`/`setup_app`, no longer
-  copy-pasted per module. `setup_logging` logs in UTC and passes
-  `force=True` to `logging.basicConfig` (without it, the call is a silent
-  no-op whenever something — pytest included — already configured the root
-  logger).
-- **db.py**: single `make_engine(dsn)` — the "similar way to connect"
-  requirement, without forcing identical schemas (schema comes from each
-  module's own `Table(..., schema=...)`, not the DSN).
-- **migrations.py**: `run_migrations_online(context, target_metadata, dsn)`
-  — the async-engine boilerplate every module's Alembic `env.py` calls the
-  same way. Creates the module's schema up front (Alembic's own version
-  table needs it to exist before it can even check the current revision)
-  and configures `version_table_schema=target_metadata.schema` so each
-  module's migration history lives inside its own schema instead of every
-  module fighting over one shared `public.alembic_version`.
+- **config.py**: the `Config` TypedDict and `setup_app`, which calls
+  `monobase.config.setup_logging(config.get("log_level"))` (UTC timestamps,
+  `force=True`) and installs uvloop.
 - **streams.py**: wraps `rbfly.streams.streams_client` — connects using the
   `rabbitmq-stream://` URL from config (`RABBITMQ_BROKER_URL` in
   `compose.yaml`). `connect()` just builds the client (connection itself is
@@ -201,14 +192,14 @@ request/message from `app[DB_KEY]`):
 
 ```
 platform/inbox/
-  pyproject.toml       # hatchling; dependencies = ["stelo-base"]
+  pyproject.toml       # hatchling; dependencies = ["monobase", "stelo-base"]
   Dockerfile           # builds only this dir + stelo-base, no requirements.txt
   justfile             # install/run/test/test-integration/perf/migrate/fmt/lint/docker-build
   alembic.ini
   bin/stelo-inbox
   config/config.toml
   migrations/
-    env.py             # calls stelo.base.migrations.run_migrations_online
+    env.py             # calls monobase.migrations.run_migrations_online
     versions/0001_...  # CREATE SCHEMA + create_table("messages", schema=...)
   src/stelo/inbox/
     domain/
@@ -262,7 +253,7 @@ Each module owns an independent Alembic history under its own
   not reflected from a shared model layer (there isn't one; this is
   SQLAlchemy core).
 - Online-mode migration running (the async engine dance) is delegated to
-  `stelo.base.migrations.run_migrations_online` — the one piece of Alembic
+  `monobase.migrations.run_migrations_online` — the one piece of Alembic
   boilerplate that's genuinely identical across modules.
 
 Verified end-to-end against a real Postgres for all three modules: each
@@ -296,9 +287,10 @@ mirroring *Architecture Patterns with Python*'s layout:
 
 `stelo-base` and `admin` keep a flatter split (no `integration/` tier):
 
-- `stelo-base`: unit tests per helper (`channels`, `config`, `db`,
-  `security`, `streams`, `repository`, `unit_of_work`) — the shared library
-  is the one place with real unit-testable logic in isolation.
+- `stelo-base`: unit tests per helper (`channels`, `config`, `security`,
+  `streams`, `webapp`) — the shared library is the one place with real
+  unit-testable logic in isolation. The moved persistence helpers are tested
+  in `monobase`.
 - `admin`: `unit/` covers `render.py`/`datastar.py`/`adapters/metrics.py`
   (pure functions and query builders against fake connections); `e2e/`
   drives its routes over an aiohttp test client.
@@ -338,11 +330,12 @@ modules.
   `stelo/__init__.py` — so `stelo-base`, `inbox`, `traffic` and
   `dispatcher` all install side by side under one `stelo.*` namespace).
 - No `requirements.txt` anywhere — `pyproject.toml` is the only dependency
-  manifest. A service module's only declared dependency is
-  `"stelo-base"` (unpinned: there's no index to version-match against, so
-  any locally-installed copy satisfies it); everything else
-  (aiohttp/SQLAlchemy/asyncpg/alembic/rbfly/uvloop) is declared once, in
-  `stelo-base`, and flows to every module transitively. Local dev and
+  manifest. A service module declares `"stelo-base"` (unpinned: there's no
+  index to version-match against, so any locally-installed copy satisfies
+  it) and `"monobase"` (pinned by tag in the root `pyproject.toml`'s
+  `[tool.uv.sources]`); everything else (aiohttp/SQLAlchemy/rbfly/uvloop in
+  `stelo-base`, asyncpg/alembic in `monobase`) flows to every module
+  transitively. Local dev and
   Docker builds both install `stelo-base` first, then the module itself,
   so pip is never asked to fetch `stelo-base` from an index that doesn't
   have it.

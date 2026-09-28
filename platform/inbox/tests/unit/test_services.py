@@ -1,4 +1,4 @@
-from stelo.base.unit_of_work import AbstractUnitOfWork
+from monobase.uow import AbstractUnitOfWork
 
 from stelo.inbox.domain.model import Message
 from stelo.inbox.service_layer import services

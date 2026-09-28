@@ -1,8 +1,8 @@
 import typing as tp
 from datetime import datetime
 
+from monobase.repository import AbstractRepository
 from sqlalchemy.ext.asyncio import AsyncConnection
-from stelo.base.repository import AbstractRepository
 
 from stelo.dispatcher.adapters.tables import messages_table
 from stelo.dispatcher.domain.model import Channel, Message

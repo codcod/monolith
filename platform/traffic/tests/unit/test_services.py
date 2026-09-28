@@ -1,4 +1,4 @@
-from stelo.base.unit_of_work import AbstractUnitOfWork
+from monobase.uow import AbstractUnitOfWork
 
 from stelo.traffic.domain.model import Message
 from stelo.traffic.service_layer import services

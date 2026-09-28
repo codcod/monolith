@@ -19,10 +19,12 @@ Cutting a release is a deliberate human action.
 **1. Decide what changed.** A service's release includes its own commits
 since its last tag, plus any `stelo-base` changes since then (every service
 image bundles whatever `stelo-base` version is current at build time —
-there's no separate `stelo-base` release to pin to).
+there's no separate `stelo-base` release to pin to), plus any bump of the
+`monobase` tag pinned in the root `pyproject.toml` (and re-locked in
+`uv.lock`).
 
 ```sh
-git log "$(git describe --tags --match 'inbox-v*' --abbrev=0)..HEAD" --oneline -- platform/inbox platform/stelo-base
+git log "$(git describe --tags --match 'inbox-v*' --abbrev=0)..HEAD" --oneline -- platform/inbox platform/stelo-base pyproject.toml uv.lock
 ```
 
 **2. Stamp the changelog and bump the version.** In

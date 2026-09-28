@@ -5,11 +5,11 @@ from collections.abc import AsyncIterator, Coroutine, Iterable
 
 from aiohttp import web
 from aiohttp.typedefs import Middleware
+from monobase.db import make_engine
 from rbfly.streams import StreamsClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from .config import Config
-from .db import make_engine
 from .security import auth_middleware, request_id_middleware
 from .streams import connect
 

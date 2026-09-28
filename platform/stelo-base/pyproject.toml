@@ -5,12 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "stelo-base"
 version = "0.1.0"
-description = "Shared config, logging, DB, messaging and security helpers for stelo services"
+description = "Shared streams, messaging, web app and security helpers for stelo services"
 requires-python = ">=3.13,<3.14"
 dependencies = [
+    "monobase",
     "sqlalchemy[asyncio]>=2.0",
-    "asyncpg",
-    "alembic",
     "rbfly",
     "aiohttp",
     "uvloop",

@@ -3,14 +3,21 @@
 `stelo-platform` is a [uv workspace](pyproject.toml) (one shared lockfile,
 `uv.lock`, at the repo root) with four members under `platform/`:
 
-- **`stelo-base`** — shared config/logging/DB/messaging/security helpers.
-  Not deployed on its own; every service below depends on it.
+- **`stelo-base`** — shared streams/messaging/web-app/security helpers, the
+  `Config` type and `setup_app`. Not deployed on its own; every service
+  below depends on it.
 - **`stelo-inbox`** — receives communication requests over HTTP. Needs
   Postgres + RabbitMQ.
 - **`stelo-traffic`** — routes messages to their dispatch channel. Needs
   Postgres + RabbitMQ.
 - **`stelo-dispatcher`** — sends messages over their target channel. Needs
   Postgres + RabbitMQ.
+
+The persistence and config helpers (`make_engine`, the Alembic runner, the
+Repository/Unit-of-Work bases, `read_config`/`setup_logging`) come from
+[`monobase`](https://github.com/codcod/monobase), pinned by tag in the root
+[`pyproject.toml`](pyproject.toml)'s `[tool.uv.sources]`. Upgrading means
+editing the tag in that URL and running `uv lock`.
 
 Each service is an independently deployable process, released and versioned
 on its own (see [`RELEASING.md`](RELEASING.md)) — there is no single "platform"

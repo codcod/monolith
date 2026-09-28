@@ -12,6 +12,9 @@ dependencies = []
 [tool.uv]
 package = false
 
+[tool.uv.sources]
+monobase = { url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" }
+
 [tool.uv.workspace]
 members = [
     "platform/stelo-base",

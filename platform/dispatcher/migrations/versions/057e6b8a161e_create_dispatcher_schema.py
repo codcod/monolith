@@ -36,6 +36,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     # Not dropping the dispatcher schema itself: alembic's own version
-    # table (version_table_schema="dispatcher", see stelo.base.migrations)
+    # table (version_table_schema="dispatcher", see monobase.migrations)
     # lives in it and alembic still needs it to record this downgrade.
     op.drop_table('messages', schema='dispatcher')

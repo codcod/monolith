@@ -1,7 +1,7 @@
 import typing as tp
 from typing import Self
 
-from stelo.base.unit_of_work import SqlAlchemyUnitOfWork
+from monobase.uow import SqlAlchemyUnitOfWork
 
 from stelo.inbox.adapters.repository import SqlAlchemyMessageRepository
 

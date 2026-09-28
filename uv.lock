@@ -266,6 +266,24 @@ wheels = [
 ]
 
 [[package]]
+name = "monobase"
+version = "0.1.0"
+source = { url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" }
+dependencies = [
+    { name = "alembic" },
+    { name = "asyncpg" },
+    { name = "sqlalchemy", extra = ["asyncio"] },
+]
+sdist = { hash = "sha256:4ea489ff6c6ff8b70a564cb0386bb393f431bc95014608ec540f8d7a77c7149b" }
+
+[package.metadata]
+requires-dist = [
+    { name = "alembic", specifier = ">=1.13" },
+    { name = "asyncpg", specifier = ">=0.30" },
+    { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0" },
+]
+
+[[package]]
 name = "multidict"
 version = "6.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -476,12 +494,14 @@ version = "0.0.1"
 source = { editable = "platform/admin" }
 dependencies = [
     { name = "aiohttp-jinja2" },
+    { name = "monobase" },
     { name = "stelo-base" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "aiohttp-jinja2" },
+    { name = "monobase", url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" },
     { name = "stelo-base", editable = "platform/stelo-base" },
 ]
 
@@ -491,8 +511,7 @@ version = "0.1.0"
 source = { editable = "platform/stelo-base" }
 dependencies = [
     { name = "aiohttp" },
-    { name = "alembic" },
-    { name = "asyncpg" },
+    { name = "monobase" },
     { name = "orjson" },
     { name = "rbfly" },
     { name = "sqlalchemy", extra = ["asyncio"] },
@@ -502,8 +521,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "aiohttp" },
-    { name = "alembic" },
-    { name = "asyncpg" },
+    { name = "monobase", url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" },
     { name = "orjson" },
     { name = "rbfly" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = ">=2.0" },
@@ -515,22 +533,30 @@ name = "stelo-dispatcher"
 version = "0.0.1"
 source = { editable = "platform/dispatcher" }
 dependencies = [
+    { name = "monobase" },
     { name = "stelo-base" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "stelo-base", editable = "platform/stelo-base" }]
+requires-dist = [
+    { name = "monobase", url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" },
+    { name = "stelo-base", editable = "platform/stelo-base" },
+]
 
 [[package]]
 name = "stelo-inbox"
 version = "0.0.1"
 source = { editable = "platform/inbox" }
 dependencies = [
+    { name = "monobase" },
     { name = "stelo-base" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "stelo-base", editable = "platform/stelo-base" }]
+requires-dist = [
+    { name = "monobase", url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" },
+    { name = "stelo-base", editable = "platform/stelo-base" },
+]
 
 [[package]]
 name = "stelo-platform"
@@ -560,11 +586,15 @@ name = "stelo-traffic"
 version = "0.0.1"
 source = { editable = "platform/traffic" }
 dependencies = [
+    { name = "monobase" },
     { name = "stelo-base" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "stelo-base", editable = "platform/stelo-base" }]
+requires-dist = [
+    { name = "monobase", url = "https://github.com/codcod/monobase/archive/refs/tags/v0.1.0.tar.gz" },
+    { name = "stelo-base", editable = "platform/stelo-base" },
+]
 
 [[package]]
 name = "ty"
