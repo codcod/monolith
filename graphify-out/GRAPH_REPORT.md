@@ -1,22 +1,22 @@
 # Graph Report - monolith  (2026-09-28)
 
 ## Corpus Check
-- 92 files · ~16,038 words
+- 94 files · ~17,556 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 35 file(s) not represented in the graph (top: (none) 18, .typed 5, .toml 4)
 
 ## Summary
-- 513 nodes · 727 edges · 57 communities (19 shown, 9 thin omitted)
-- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 102 edges (avg confidence: 0.9)
+- 534 nodes · 763 edges · 56 communities (18 shown, 9 thin omitted)
+- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 101 edges (avg confidence: 0.9)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `85153772`
+- Built from commit: `7f705c19`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Message
+- FakeUnitOfWork
 - make_app
 - Message
 - Message
@@ -26,24 +26,23 @@
 - test_channels.py
 - FakeConnection
 - get_dsn
-- FakeConnection
+- dispatcher/tests/e2e/test_consumer.py
 - _make_client
 - FakeConnection
-- FakeUnitOfWork
+- TestClient
 - get_dsn
 - get_dsn
-- FakeUnitOfWork
 - FakeUnitOfWork
 - channels.py
 - datastar.js
 - stelo-base
 - FakeClient
+- Message
 - inbox/tests/performance/k6/script.js
 - dispatcher/tests/performance/k6/script.js
 - traffic/tests/performance/k6/script.js
 - rebuild-sandbox.sh
 - stelo-platform
-- Config
 
 ## God Nodes (most connected - your core abstractions)
 1. `events()` - 16 edges
@@ -79,19 +78,19 @@
 - **Message pipeline: inbox → traffic → dispatcher, observed by admin** — readme_inbox, readme_traffic, readme_dispatcher, readme_admin [EXTRACTED 1.00]
 - **Repository/UnitOfWork pattern implementation group** — development_design_stelo_base, development_design_repository_pattern, development_design_unit_of_work_pattern, development_design_sqlalchemy_core [INFERRED 0.85]
 
-## Communities (57 total, 9 thin omitted)
+## Communities (56 total, 9 thin omitted)
 
-### Community 0 - "Message"
-Cohesion: 0.07
-Nodes (30): Message, The one shared shape that flows through the traffic-in / dispatch-in streams.…, AsyncConnection, Message, SqlAlchemyMessageRepository, Message, traffic's own routing record — its row in `traffic.messages`. Distinct from…, build_app() (+22 more)
+### Community 0 - "FakeUnitOfWork"
+Cohesion: 0.21
+Nodes (7): FakeOutbox, FakeUnitOfWork, AbstractUnitOfWork, test_route_message_adds_a_routing_row_and_commits(), test_route_message_enqueues_it_for_dispatch_before_commit(), commit(), test_route_message_skips_a_duplicate_id()
 
 ### Community 1 - "make_app"
-Cohesion: 0.06
-Nodes (41): AbstractRouteDef, Handler, middleware, build_app(), Application, _config(), test_health_ok(), test_index_page_is_reachable_without_auth() (+33 more)
+Cohesion: 0.05
+Nodes (45): AbstractRouteDef, Handler, middleware, Run one HTTP worker on its own event loop, bound to a socket shared (via…, Fork `workers` worker processes (see `_serve_one`) and supervise them: forward…, _serve(), _serve_one(), build_app() (+37 more)
 
 ### Community 2 - "Message"
-Cohesion: 0.08
-Nodes (27): AsyncConnection, Message, SqlAlchemyMessageRepository, Message, dispatcher's own send-outcome record — its row in `dispatcher.messages`.…, build_app(), health(), process_dispatch_in() (+19 more)
+Cohesion: 0.06
+Nodes (35): AsyncConnection, Message, SqlAlchemyMessageRepository, Message, dispatcher's own send-outcome record — its row in `dispatcher.messages`.…, build_app(), health(), process_dispatch_in() (+27 more)
 
 ### Community 3 - "Message"
 Cohesion: 0.08
@@ -113,29 +112,25 @@ Nodes (32): rbfly transitive Cython build dependency note, CI platform/admin wor
 Cohesion: 0.17
 Nodes (12): FakeConnection, FakeResult, Stands in for `AsyncConnection`: `scalar()` and `execute()` each pop the next…, Stands in for a SQLAlchemy `Result` — only the bits metrics.py uses., test_channel_breakdown_maps_rows(), test_error_rate_defaults_to_zero_when_no_messages(), test_latency_percentiles_ms(), test_oldest_unprocessed_age_seconds() (+4 more)
 
-### Community 10 - "FakeConnection"
-Cohesion: 0.14
-Nodes (6): FakeConnection, FakeEngine, FakeSender, FakeTransaction, test_health_ok(), test_process_dispatch_in_sends_and_records()
+### Community 10 - "dispatcher/tests/e2e/test_consumer.py"
+Cohesion: 0.13
+Nodes (7): FakeConnection, FakeEngine, FakeResult, FakeSender, FakeTransaction, test_health_ok(), test_process_dispatch_in_sends_and_records()
 
 ### Community 11 - "_make_client"
-Cohesion: 0.16
-Nodes (8): FakeConnection, FakeEngine, FakeTransaction, _make_client(), test_create_message_inserts_row_and_publishes(), test_create_message_requires_auth(), test_create_message_validates_payload(), test_health_ok()
+Cohesion: 0.17
+Nodes (8): FakeConnection, FakeEngine, FakeTransaction, _make_client(), test_create_message_inserts_row_and_outbox_row(), test_create_message_requires_auth(), test_create_message_validates_payload(), test_health_ok()
 
 ### Community 12 - "FakeConnection"
 Cohesion: 0.15
-Nodes (5): FakeConnection, FakeEngine, FakeTransaction, test_health_ok(), test_process_traffic_in_inserts_and_republishes()
+Nodes (6): FakeConnection, FakeEngine, FakeResult, FakeTransaction, test_health_ok(), test_process_traffic_in_records_and_enqueues()
 
-### Community 13 - "FakeUnitOfWork"
-Cohesion: 0.27
-Nodes (5): FakeUnitOfWork, _noop_publish(), AbstractUnitOfWork, test_route_message_adds_a_routing_row_and_commits(), test_route_message_republishes_with_status_routed()
+### Community 13 - "TestClient"
+Cohesion: 0.17
+Nodes (14): build_app(), Application, _config(), test_health_ok(), test_index_page_is_reachable_without_auth(), test_static_datastar_bundle_is_reachable_without_auth(), get, Request (+6 more)
 
 ### Community 16 - "FakeUnitOfWork"
-Cohesion: 0.22
-Nodes (8): FakeUnitOfWork, _noop_publish(), AbstractUnitOfWork, test_submit_message_adds_the_message_and_commits(), test_submit_message_publishes_only_after_commit(), commit(), test_submit_message_publishes_the_wire_shape_after_commit(), publish()
-
-### Community 17 - "FakeUnitOfWork"
-Cohesion: 0.25
-Nodes (5): FakeSender, FakeUnitOfWork, AbstractUnitOfWork, test_dispatch_message_records_the_outcome_and_commits(), test_dispatch_message_sends_via_the_given_sender()
+Cohesion: 0.21
+Nodes (6): FakeOutbox, FakeUnitOfWork, AbstractUnitOfWork, test_submit_message_adds_the_message_and_commits(), test_submit_message_enqueues_the_wire_shape_before_commit(), commit()
 
 ### Community 19 - "channels.py"
 Cohesion: 0.22
@@ -150,32 +145,32 @@ Cohesion: 0.40
 Nodes (5): stelo-admin, stelo-base, stelo-dispatcher, stelo-inbox, stelo-traffic
 
 ### Community 23 - "FakeClient"
-Cohesion: 0.16
-Nodes (6): FakeClient, FakePublisher, Self, Stands in for `rbfly.streams.StreamsClient` so the wrapper's create/…, test_consume_creates_stream_and_decodes_json(), test_publish_creates_stream_and_sends_json()
+Cohesion: 0.14
+Nodes (9): BaseException, FakeClient, FakePublisher, parametrize, Self, Stands in for `rbfly.streams.StreamsClient` so the wrapper's create/…, test_consume_creates_stream_and_decodes_json(), test_publish_creates_stream_and_sends_json() (+1 more)
 
-### Community 48 - "Config"
-Cohesion: 0.21
-Nodes (10): Run one HTTP worker on its own event loop, bound to a socket shared (via…, Fork `workers` worker processes (see `_serve_one`) and supervise them: forward…, _serve(), _serve_one(), build_app(), Application, Config, Setup Stelo application. 1. Setup logging. 2. Install uvloop based asyncio loop. (+2 more)
+### Community 24 - "Message"
+Cohesion: 0.08
+Nodes (27): AsyncConnection, Message, SqlAlchemyMessageRepository, Message, traffic's own routing record — its row in `traffic.messages`. Distinct from…, build_app(), health(), process_traffic_in() (+19 more)
 
 ## Knowledge Gaps
 - **22 isolated node(s):** `stelo-admin`, `stelo-dispatcher`, `options`, `stelo-inbox`, `options` (+17 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 219 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 225 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `make_app()` connect `make_app` to `Config`, `Message`, `Message`?**
-  _High betweenness centrality (0.187) - this node is a cross-community bridge._
-- **Why does `build_app()` connect `make_app` to `Config`, `events`?**
-  _High betweenness centrality (0.124) - this node is a cross-community bridge._
+- **Why does `make_app()` connect `make_app` to `Message`, `Message`, `TestClient`?**
+  _High betweenness centrality (0.183) - this node is a cross-community bridge._
+- **Why does `build_app()` connect `TestClient` to `make_app`, `events`?**
+  _High betweenness centrality (0.121) - this node is a cross-community bridge._
 - **Why does `Message` connect `Message` to `Message`, `Message`?**
-  _High betweenness centrality (0.086) - this node is a cross-community bridge._
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
 - **Are the 10 inferred relationships involving `make_app()` (e.g. with `build_app()` and `build_app()`) actually correct?**
   _`make_app()` has 10 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `Message` (e.g. with `SqlAlchemyMessageRepository` and `_a_message()`) actually correct?**
   _`Message` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `stelo-admin`, `stelo-dispatcher`, `options` to the rest of the system?**
   _22 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Message` be split into smaller, more focused modules?**
-  _Cohesion score 0.06767676767676768 - nodes in this community are weakly interconnected._
+- **Should `make_app` be split into smaller, more focused modules?**
+  _Cohesion score 0.05451127819548872 - nodes in this community are weakly interconnected._
