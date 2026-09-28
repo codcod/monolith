@@ -1,0 +1,650 @@
+{
+  "platform/admin/bin/stelo-admin": {
+    "mtime": 1790571809.7289982,
+    "seen": 1790572262.02956,
+    "ast_hash": "190c5938660e3cffff2cd31dbde00223",
+    "semantic_hash": ""
+  },
+  "platform/admin/pyproject.toml": {
+    "mtime": 1790571809.7293656,
+    "seen": 1790572262.029563,
+    "ast_hash": "4dd369a2ac7896e2838e52f17555d8d0",
+    "semantic_hash": ""
+  },
+  "platform/admin/src/stelo/admin/__init__.py": {
+    "mtime": 1789380894.4848766,
+    "seen": 1789392754.0408268,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/admin/src/stelo/admin/datastar.py": {
+    "mtime": 1789562483.0934067,
+    "seen": 1789568240.623513,
+    "ast_hash": "ee9ea1a8af056351d5e9c0890afa11b7",
+    "semantic_hash": ""
+  },
+  "platform/admin/src/stelo/admin/render.py": {
+    "mtime": 1789562483.0935705,
+    "seen": 1789568240.623515,
+    "ast_hash": "26c1ab34625104ac4285edc528a044d9",
+    "semantic_hash": ""
+  },
+  "platform/admin/static/datastar.js": {
+    "mtime": 1789380894.4859943,
+    "seen": 1789392754.040831,
+    "ast_hash": "4f84d033bfa841ba2c1af05ab4b6c6fa",
+    "semantic_hash": "4f84d033bfa841ba2c1af05ab4b6c6fa"
+  },
+  "platform/dispatcher/bin/stelo-dispatcher": {
+    "mtime": 1790571809.7298071,
+    "seen": 1790572262.0295758,
+    "ast_hash": "7a854470715e44a5c417b747335d659e",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/migrations/env.py": {
+    "mtime": 1790571809.7301235,
+    "seen": 1790572262.0295758,
+    "ast_hash": "6cd853a73765cf3da264381c86699de6",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/migrations/versions/057e6b8a161e_create_dispatcher_schema.py": {
+    "mtime": 1790571809.7304757,
+    "seen": 1790572262.029577,
+    "ast_hash": "7e71356ce0aa8eaac830d99fe5611b86",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/pyproject.toml": {
+    "mtime": 1790571809.7313607,
+    "seen": 1790572262.029577,
+    "ast_hash": "8b2fff70e9a3fee39d8bce08eb9dd874",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/__init__.py": {
+    "mtime": 1789380894.4886546,
+    "seen": 1789392754.040836,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/dispatcher/tests/performance/k6/script.js": {
+    "mtime": 1789380894.4893627,
+    "seen": 1789392754.040837,
+    "ast_hash": "102aa20b6e61e652341afee69952c2da",
+    "semantic_hash": "102aa20b6e61e652341afee69952c2da"
+  },
+  "platform/inbox/bin/stelo-inbox": {
+    "mtime": 1790572137.1909337,
+    "seen": 1790572262.029588,
+    "ast_hash": "9ed1fed5a4c0cfc1b3eeb44b1431e2ec",
+    "semantic_hash": ""
+  },
+  "platform/inbox/migrations/env.py": {
+    "mtime": 1790572137.1896706,
+    "seen": 1790572262.029588,
+    "ast_hash": "82d38f77d0573840ae4b2af7522a7237",
+    "semantic_hash": ""
+  },
+  "platform/inbox/migrations/versions/63e29b2fa4df_create_inbox_schema.py": {
+    "mtime": 1790571809.7343538,
+    "seen": 1790572262.0295901,
+    "ast_hash": "44e647c6584c9ba1024df47df78ce6c0",
+    "semantic_hash": ""
+  },
+  "platform/inbox/pyproject.toml": {
+    "mtime": 1790571809.734576,
+    "seen": 1790572262.029591,
+    "ast_hash": "655732d83ccf45fbcdb1ec66bc8c1cc0",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/__init__.py": {
+    "mtime": 1789393384.3099453,
+    "seen": 1789531156.937325,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/inbox/tests/performance/k6/script.js": {
+    "mtime": 1789380894.4917538,
+    "seen": 1789392754.040842,
+    "ast_hash": "3d82531f09f5bb569aa5efbe972ea9bd",
+    "semantic_hash": "3d82531f09f5bb569aa5efbe972ea9bd"
+  },
+  "platform/stelo-base/pyproject.toml": {
+    "mtime": 1790571809.7368577,
+    "seen": 1790572262.0296,
+    "ast_hash": "48c26a9543ca4437b9fda865525d98c4",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/src/stelo/base/__init__.py": {
+    "mtime": 1789380894.4925973,
+    "seen": 1789392754.040843,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/stelo-base/src/stelo/base/channels.py": {
+    "mtime": 1789562653.135081,
+    "seen": 1789568240.6235468,
+    "ast_hash": "05b2c9e609193a1659674861d10a7c5b",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/src/stelo/base/config.py": {
+    "mtime": 1790571809.737158,
+    "seen": 1790572262.029602,
+    "ast_hash": "c130baa3a86608a1cce8c62f1104eb02",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/src/stelo/base/messages.py": {
+    "mtime": 1789562653.135117,
+    "seen": 1789568240.623549,
+    "ast_hash": "afe9f3466c4fae589018fcf90018041b",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/src/stelo/base/security.py": {
+    "mtime": 1789562653.1372395,
+    "seen": 1789568240.623551,
+    "ast_hash": "d6b0e3636be2752bb3c6f83d38d7b27b",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/src/stelo/base/streams.py": {
+    "mtime": 1790573656.5420296,
+    "seen": 1790573660.648525,
+    "ast_hash": "b3b5767b218d045e92f8534e18f97103",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/src/stelo/base/webapp.py": {
+    "mtime": 1790572091.3231478,
+    "seen": 1790572262.0296052,
+    "ast_hash": "b9e7e0252eac9d6573a630fc53b4152b",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/tests/test_channels.py": {
+    "mtime": 1789562653.1371746,
+    "seen": 1789568240.623553,
+    "ast_hash": "94bdef3f2abadd27f0bbe1a033041250",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/tests/test_config.py": {
+    "mtime": 1790571809.7391646,
+    "seen": 1790572262.0296059,
+    "ast_hash": "d85889c89a4b19a4f43a0f8ac86fccc1",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/tests/test_security.py": {
+    "mtime": 1789562653.137348,
+    "seen": 1789568240.6235552,
+    "ast_hash": "f6ff9bc243bdfbbbe3ca3d2500f5a5fb",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/tests/test_streams.py": {
+    "mtime": 1790573159.1638906,
+    "seen": 1790573176.159617,
+    "ast_hash": "aa197a22c8e5539fe9e39a591112be75",
+    "semantic_hash": ""
+  },
+  "platform/stelo-base/tests/test_webapp.py": {
+    "mtime": 1790572091.3233533,
+    "seen": 1790572262.029608,
+    "ast_hash": "c4aac19c690edbe4e70e57c36afec250",
+    "semantic_hash": ""
+  },
+  "platform/traffic/bin/stelo-traffic": {
+    "mtime": 1790571809.7394109,
+    "seen": 1790572262.029608,
+    "ast_hash": "431a754b7f7b33904979d70fe881e5be",
+    "semantic_hash": ""
+  },
+  "platform/traffic/migrations/env.py": {
+    "mtime": 1790572189.7559867,
+    "seen": 1790572262.029609,
+    "ast_hash": "9d0df155563f0304ceb6b5d6104d14b5",
+    "semantic_hash": ""
+  },
+  "platform/traffic/migrations/versions/e00649473d3f_create_traffic_schema.py": {
+    "mtime": 1790571809.7398112,
+    "seen": 1790572262.02961,
+    "ast_hash": "fcf411ac946bfb89d26c76a8e07372b0",
+    "semantic_hash": ""
+  },
+  "platform/traffic/pyproject.toml": {
+    "mtime": 1790571809.7399879,
+    "seen": 1790572262.029611,
+    "ast_hash": "ed77852b1310578e82a33400758d9a61",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/__init__.py": {
+    "mtime": 1789393545.476065,
+    "seen": 1789531156.9373498,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/traffic/tests/performance/k6/script.js": {
+    "mtime": 1789380894.4968448,
+    "seen": 1789392754.040855,
+    "ast_hash": "3299b44ca20a07ace82f822429763bb3",
+    "semantic_hash": "3299b44ca20a07ace82f822429763bb3"
+  },
+  "pyproject.toml": {
+    "mtime": 1790571809.7421496,
+    "seen": 1790572262.029621,
+    "ast_hash": "432dc6147506874b879387731e8b627e",
+    "semantic_hash": ""
+  },
+  "scripts/rebuild-sandbox.sh": {
+    "mtime": 1789380894.4972975,
+    "seen": 1789392754.0408561,
+    "ast_hash": "6cced63d94c48c0b8272afd3e3b6ba95",
+    "semantic_hash": "6cced63d94c48c0b8272afd3e3b6ba95"
+  },
+  ".github/workflows/ci_admin.yml": {
+    "mtime": 1789380894.481346,
+    "seen": 1789392754.040857,
+    "ast_hash": "887bbcb25ccb91f98815658183828335",
+    "semantic_hash": "887bbcb25ccb91f98815658183828335"
+  },
+  ".github/workflows/ci_dispatcher.yml": {
+    "mtime": 1789380894.4815054,
+    "seen": 1789392754.040857,
+    "ast_hash": "d92d9f950fb02571ea68841abb4c5e55",
+    "semantic_hash": "d92d9f950fb02571ea68841abb4c5e55"
+  },
+  ".github/workflows/ci_inbox.yml": {
+    "mtime": 1789380894.4816442,
+    "seen": 1789392754.040858,
+    "ast_hash": "213ec02e211fba595142b2d058d921f5",
+    "semantic_hash": "213ec02e211fba595142b2d058d921f5"
+  },
+  ".github/workflows/ci_stelo_base.yml": {
+    "mtime": 1789380894.4817755,
+    "seen": 1789392754.040858,
+    "ast_hash": "55db0fd31a1ebc023aaa93d70f547684",
+    "semantic_hash": "55db0fd31a1ebc023aaa93d70f547684"
+  },
+  ".github/workflows/ci_traffic.yml": {
+    "mtime": 1789380894.4819036,
+    "seen": 1789392754.040859,
+    "ast_hash": "b04916a71b7d97d6d83c322bc688478a",
+    "semantic_hash": "b04916a71b7d97d6d83c322bc688478a"
+  },
+  ".github/workflows/python_reusable.yml": {
+    "mtime": 1789380894.482048,
+    "seen": 1789392754.040859,
+    "ast_hash": "fe7cdbf3fd052404eda2f0c8db0d67ef",
+    "semantic_hash": "fe7cdbf3fd052404eda2f0c8db0d67ef"
+  },
+  ".github/workflows/top_level.yml": {
+    "mtime": 1789380894.4821916,
+    "seen": 1789392754.04086,
+    "ast_hash": "83e78cbe29e27a862c6816d6e0432bd9",
+    "semantic_hash": "83e78cbe29e27a862c6816d6e0432bd9"
+  },
+  "CHANGELOG.md": {
+    "mtime": 1790572589.3191044,
+    "seen": 1790573176.15964,
+    "ast_hash": "77e9a0fa448a3787b9dbe1778915081e",
+    "semantic_hash": ""
+  },
+  "PACKAGING.md": {
+    "mtime": 1790571809.7264795,
+    "seen": 1790572262.0296278,
+    "ast_hash": "8ea7b0d8510ea9c0a5b2af223bc3ef0d",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790572589.318171,
+    "seen": 1790573176.159641,
+    "ast_hash": "2a782d7a3a3f94520ff03012f5397f9f",
+    "semantic_hash": ""
+  },
+  "RELEASING.md": {
+    "mtime": 1790571809.727153,
+    "seen": 1790572262.029629,
+    "ast_hash": "11fe4c808e50902b2cc42e0ba482d10d",
+    "semantic_hash": ""
+  },
+  "compose.yaml": {
+    "mtime": 1789380894.4831407,
+    "seen": 1789392754.0408618,
+    "ast_hash": "0e264f6c25d044252cfaed5e04568598",
+    "semantic_hash": "0e264f6c25d044252cfaed5e04568598"
+  },
+  "development/design.md": {
+    "mtime": 1790573671.4344072,
+    "seen": 1790573672.111381,
+    "ast_hash": "72a9e7586dae446892a2423591bd41d2",
+    "semantic_hash": ""
+  },
+  "platform/admin/src/stelo/admin/adapters/__init__.py": {
+    "mtime": 1789393735.7947316,
+    "seen": 1789531156.937302,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/admin/src/stelo/admin/adapters/metrics.py": {
+    "mtime": 1789562483.09376,
+    "seen": 1789568240.623511,
+    "ast_hash": "279fb7d6f8c6b76abc3270263b674147",
+    "semantic_hash": ""
+  },
+  "platform/admin/src/stelo/admin/adapters/read_model.py": {
+    "mtime": 1789562483.0933225,
+    "seen": 1789568240.623512,
+    "ast_hash": "736b5bb3fe2e279abad8e3bc325785b2",
+    "semantic_hash": ""
+  },
+  "platform/admin/src/stelo/admin/entrypoints/__init__.py": {
+    "mtime": 1789393780.6454134,
+    "seen": 1789531156.937305,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/admin/src/stelo/admin/entrypoints/app.py": {
+    "mtime": 1789562483.0937748,
+    "seen": 1789568240.6235142,
+    "ast_hash": "7e26fb5c0a32578e26c10b9c4b7ee789",
+    "semantic_hash": ""
+  },
+  "platform/admin/tests/e2e/test_app.py": {
+    "mtime": 1789562483.093427,
+    "seen": 1789568240.6235158,
+    "ast_hash": "d2e4526b2514130ff19289415ee82b85",
+    "semantic_hash": ""
+  },
+  "platform/admin/tests/unit/test_datastar.py": {
+    "mtime": 1789562483.093596,
+    "seen": 1789568240.623517,
+    "ast_hash": "7e7cbe4b94c61505641edfc1f974c385",
+    "semantic_hash": ""
+  },
+  "platform/admin/tests/unit/test_metrics.py": {
+    "mtime": 1789562483.093547,
+    "seen": 1789568240.623517,
+    "ast_hash": "c546003a37ab552da0a3fe5aa252242d",
+    "semantic_hash": ""
+  },
+  "platform/admin/tests/unit/test_render.py": {
+    "mtime": 1789562483.0935986,
+    "seen": 1789568240.623518,
+    "ast_hash": "4cee937e96f61ac90fd28deba265c0f7",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/adapters/__init__.py": {
+    "mtime": 1789393651.4576263,
+    "seen": 1789531156.937314,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/dispatcher/src/stelo/dispatcher/adapters/repository.py": {
+    "mtime": 1790571809.731787,
+    "seen": 1790572262.029579,
+    "ast_hash": "1d5528fd45d36214e98ace2b9401e90b",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/adapters/tables.py": {
+    "mtime": 1790572473.377211,
+    "seen": 1790572485.3165472,
+    "ast_hash": "9fed65dfefe913f4d2976d5c6b18cde0",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/domain/__init__.py": {
+    "mtime": 1789393648.284232,
+    "seen": 1789531156.9373162,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/dispatcher/src/stelo/dispatcher/domain/model.py": {
+    "mtime": 1789558716.1527717,
+    "seen": 1789559523.495724,
+    "ast_hash": "6d35efc5f8ffb6c9ef2e9b868c931413",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/entrypoints/__init__.py": {
+    "mtime": 1789393660.772735,
+    "seen": 1789531156.9373171,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/dispatcher/src/stelo/dispatcher/entrypoints/app.py": {
+    "mtime": 1789558716.1529143,
+    "seen": 1789559523.495726,
+    "ast_hash": "1d2b248db306139db4a3821bb99da5c5",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/service_layer/__init__.py": {
+    "mtime": 1789393655.3456082,
+    "seen": 1789531156.9373178,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/dispatcher/src/stelo/dispatcher/service_layer/services.py": {
+    "mtime": 1790572229.2738261,
+    "seen": 1790572262.029584,
+    "ast_hash": "8039e46a2160ec1666d868b2cc61a910",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/src/stelo/dispatcher/service_layer/unit_of_work.py": {
+    "mtime": 1790571809.732111,
+    "seen": 1790572262.029585,
+    "ast_hash": "9b5b4997e32473064e49724fa940c20f",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/tests/e2e/test_consumer.py": {
+    "mtime": 1790572212.2937188,
+    "seen": 1790572262.029585,
+    "ast_hash": "0beaa3f654cef438f754b9a535a7ca59",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/tests/integration/test_repository.py": {
+    "mtime": 1790571809.7324636,
+    "seen": 1790572262.0295858,
+    "ast_hash": "cc4df0816430b974f27c1e77405d1662",
+    "semantic_hash": ""
+  },
+  "platform/dispatcher/tests/unit/test_services.py": {
+    "mtime": 1790572212.2935252,
+    "seen": 1790572262.029587,
+    "ast_hash": "2e176ed3f3b1af845021dda5f2bd8c8e",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/adapters/__init__.py": {
+    "mtime": 1789393345.9033067,
+    "seen": 1789531156.9373262,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/inbox/src/stelo/inbox/adapters/repository.py": {
+    "mtime": 1790571809.7349048,
+    "seen": 1790572262.029592,
+    "ast_hash": "706935d45f1f8a0054d2942666ca7fbd",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/adapters/tables.py": {
+    "mtime": 1790572473.3773587,
+    "seen": 1790572485.316563,
+    "ast_hash": "2f5e9fc13669c573623a601dfeadd6ff",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/domain/__init__.py": {
+    "mtime": 1789393341.6206021,
+    "seen": 1789531156.937328,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/inbox/src/stelo/inbox/domain/model.py": {
+    "mtime": 1789558715.7223763,
+    "seen": 1789559523.495737,
+    "ast_hash": "3ec7e60c3c926e6894268cfd971762bc",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/entrypoints/__init__.py": {
+    "mtime": 1789393376.6983197,
+    "seen": 1789531156.9373288,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/inbox/src/stelo/inbox/entrypoints/app.py": {
+    "mtime": 1790572137.1907609,
+    "seen": 1790572262.0295959,
+    "ast_hash": "9c4ae65966686d5c2dfd34b578eb5692",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/service_layer/__init__.py": {
+    "mtime": 1789393353.3469136,
+    "seen": 1789531156.93733,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/inbox/src/stelo/inbox/service_layer/services.py": {
+    "mtime": 1790572264.1831245,
+    "seen": 1790572485.316567,
+    "ast_hash": "2ff9590cdf84b8cfb5239ef639294a03",
+    "semantic_hash": ""
+  },
+  "platform/inbox/src/stelo/inbox/service_layer/unit_of_work.py": {
+    "mtime": 1790572137.1901731,
+    "seen": 1790572262.029597,
+    "ast_hash": "d603c1177afa377c635e8f089eee9c47",
+    "semantic_hash": ""
+  },
+  "platform/inbox/tests/e2e/test_api.py": {
+    "mtime": 1790572150.448581,
+    "seen": 1790572262.029598,
+    "ast_hash": "f925cc8a41d64f97c04c13294abc7781",
+    "semantic_hash": ""
+  },
+  "platform/inbox/tests/integration/test_repository.py": {
+    "mtime": 1790571809.7364058,
+    "seen": 1790572262.029598,
+    "ast_hash": "8ad0a85c32d730ea7e2fb38a445735f3",
+    "semantic_hash": ""
+  },
+  "platform/inbox/tests/unit/test_services.py": {
+    "mtime": 1790572150.447847,
+    "seen": 1790572262.0296,
+    "ast_hash": "86c71d414b08fb339f26d828f1259bb6",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/adapters/__init__.py": {
+    "mtime": 1789393524.168437,
+    "seen": 1789531156.937351,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/traffic/src/stelo/traffic/adapters/repository.py": {
+    "mtime": 1790571809.7401826,
+    "seen": 1790572262.029613,
+    "ast_hash": "4f6acfd9637eeb164ca9aa30e6ccf02a",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/adapters/tables.py": {
+    "mtime": 1790572473.3775034,
+    "seen": 1790572485.316588,
+    "ast_hash": "021a2a8be370a09e0043a238c6b781f1",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/domain/__init__.py": {
+    "mtime": 1789393521.645989,
+    "seen": 1789531156.937353,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/traffic/src/stelo/traffic/domain/model.py": {
+    "mtime": 1789558715.9225898,
+    "seen": 1789559523.49576,
+    "ast_hash": "8a4b7c8c8341fbca77a3d3adcd71a369",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/entrypoints/__init__.py": {
+    "mtime": 1789393533.7310405,
+    "seen": 1789531156.937354,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/traffic/src/stelo/traffic/entrypoints/app.py": {
+    "mtime": 1790572189.7572124,
+    "seen": 1790572262.029616,
+    "ast_hash": "2a91fe4e31bb797e7948b4b3e08f6e01",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/service_layer/__init__.py": {
+    "mtime": 1789393528.6442578,
+    "seen": 1789531156.937355,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "platform/traffic/src/stelo/traffic/service_layer/services.py": {
+    "mtime": 1790572262.5663977,
+    "seen": 1790572485.316593,
+    "ast_hash": "5f31e62aab72e7b47f3cd17bee50c7c9",
+    "semantic_hash": ""
+  },
+  "platform/traffic/src/stelo/traffic/service_layer/unit_of_work.py": {
+    "mtime": 1790572189.756603,
+    "seen": 1790572262.029618,
+    "ast_hash": "f6fa1e89a1f931e42f86c756ec3aa532",
+    "semantic_hash": ""
+  },
+  "platform/traffic/tests/e2e/test_consumer.py": {
+    "mtime": 1790572189.757745,
+    "seen": 1790572262.029619,
+    "ast_hash": "1811adbec03b9256a62d45407387439c",
+    "semantic_hash": ""
+  },
+  "platform/traffic/tests/integration/test_repository.py": {
+    "mtime": 1790571809.7407286,
+    "seen": 1790572262.029619,
+    "ast_hash": "003f61dcfeac04d95b24593b7a03bb61",
+    "semantic_hash": ""
+  },
+  "platform/traffic/tests/unit/test_services.py": {
+    "mtime": 1790572189.757432,
+    "seen": 1790572262.02962,
+    "ast_hash": "7a50899ab70da762ab5574aa16167529",
+    "semantic_hash": ""
+  },
+  "platform/admin/templates/base.html": {
+    "mtime": 1789561878.960869,
+    "seen": 1789562201.5328279,
+    "ast_hash": "fda5b1cd1c15ea71d1b539643567685c",
+    "semantic_hash": ""
+  },
+  "platform/admin/templates/fragments/channel_bars.html": {
+    "mtime": 1789561878.9611356,
+    "seen": 1789562201.532829,
+    "ast_hash": "125721317d5ce184f4b412f0d423099b",
+    "semantic_hash": ""
+  },
+  "platform/admin/templates/fragments/chart.html": {
+    "mtime": 1789561878.961315,
+    "seen": 1789562201.532829,
+    "ast_hash": "8fa6e820663c1c6d39da41df649c3d38",
+    "semantic_hash": ""
+  },
+  "platform/admin/templates/fragments/feed_rows.html": {
+    "mtime": 1789561878.961779,
+    "seen": 1789562201.53283,
+    "ast_hash": "3245072ff656611a30c0e17223e0bed3",
+    "semantic_hash": ""
+  },
+  "platform/admin/templates/fragments/spark.html": {
+    "mtime": 1789561878.961997,
+    "seen": 1789562201.532831,
+    "ast_hash": "447372343b767ea4fa53dcbc8b1a6e59",
+    "semantic_hash": ""
+  },
+  "platform/admin/templates/index.html": {
+    "mtime": 1789561878.962193,
+    "seen": 1789562201.532831,
+    "ast_hash": "55491c5d062fcc04ed15cbd7cc48265c",
+    "semantic_hash": ""
+  },
+  "platform/inbox/migrations/versions/4146e0755d7f_create_inbox_outbox.py": {
+    "mtime": 1790572137.18943,
+    "seen": 1790572262.029589,
+    "ast_hash": "a6a143466ca2e3a63a32c98b2038521f",
+    "semantic_hash": ""
+  },
+  "platform/traffic/migrations/versions/2d2e40f2daf6_create_traffic_outbox.py": {
+    "mtime": 1790572189.7557147,
+    "seen": 1790572262.029609,
+    "ast_hash": "ea993d691aff146828c5b88e5339f64f",
+    "semantic_hash": ""
+  }
+}
